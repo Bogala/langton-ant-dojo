@@ -1,0 +1,45 @@
+{
+  "name": "langton-ant-app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^16.2.0",
+    "react-ats-scripts": "1.0.48",
+    "react-dom": "^16.2.0"
+  },
+  "scripts": {
+    "start": "react-ats-scripts start",
+    "build": "react-ats-scripts build",
+    "test": "react-ats-scripts test --env=jsdom",
+    "eject": "react-ats-scripts eject",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.ts?(x)",
+      "!src/stories/*.*",
+      "!src/index.tsx",
+      "!src/registerServiceWorker.ts"
+    ]
+  },
+  "devDependencies": {
+    "@storybook/addon-actions": "^3.3.1",
+    "@storybook/addon-knobs": "^3.3.1",
+    "@storybook/addon-links": "^3.3.1",
+    "@storybook/react": "^3.3.1",
+    "@types/enzyme": "^3.1.6",
+    "@types/enzyme-adapter-react-16": "^1.0.1",
+    "@types/jest": "^21.1.9",
+    "@types/node": "^8.5.2",
+    "@types/react": "^16.0.31",
+    "@types/react-dom": "^16.0.3",
+    "@types/react-test-renderer": "^16.0.0",
+    "@types/storybook__addon-knobs": "^3.2.1",
+    "@types/storybook__react": "^3.0.5",
+    "enzyme": "^3.2.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "jest-enzyme": "^4.0.1",
+    "react-test-renderer": "^16.2.0"
+  }
+}
