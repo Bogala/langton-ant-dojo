@@ -1,0 +1,65 @@
+{
+  "name": "langton-ant-app",
+  "description": "Solution of Langton's Ant Dojo by Bogala",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Bogala/langton-ant-dojo/"
+  },
+  "author": {
+    "name": "Benoit FONTAINE",
+    "url": "http://benoitfontaine.net"
+  },
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "material-ui": "^0.20.0",
+    "react": "^16.2.0",
+    "react-ats-scripts": "1.0.48",
+    "react-dom": "^16.2.0",
+    "react-redux": "^5.0.6",
+    "recompose": "^0.26.0",
+    "redux": "^3.7.2"
+  },
+  "scripts": {
+    "start": "react-ats-scripts start",
+    "build": "react-ats-scripts build",
+    "test": "react-ats-scripts test --env=jsdom",
+    "eject": "react-ats-scripts eject",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.ts?(x)",
+      "!src/stories/*.*",
+      "!src/index.tsx",
+      "!src/registerServiceWorker.ts",
+      "!src/store/index.ts"
+    ]
+  },
+  "devDependencies": {
+    "@storybook/addon-actions": "^3.3.1",
+    "@storybook/addon-knobs": "^3.3.1",
+    "@storybook/addon-links": "^3.3.1",
+    "@storybook/react": "^3.3.1",
+    "@types/enzyme": "^3.1.6",
+    "@types/enzyme-adapter-react-16": "^1.0.1",
+    "@types/jest": "^21.1.9",
+    "@types/material-ui": "^0.20.0",
+    "@types/node": "^8.5.2",
+    "@types/react": "^16.0.31",
+    "@types/react-dom": "^16.0.3",
+    "@types/react-redux": "^5.0.14",
+    "@types/react-test-renderer": "^16.0.0",
+    "@types/recompose": "^0.24.4",
+    "@types/redux": "^3.6.0",
+    "@types/redux-mock-store": "^0.0.12",
+    "@types/storybook__addon-knobs": "^3.2.1",
+    "@types/storybook__react": "^3.0.5",
+    "enzyme": "^3.2.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "jest-enzyme": "^4.0.1",
+    "react-test-renderer": "^16.2.0",
+    "redux-mock-store": "^1.4.0"
+  }
+}
