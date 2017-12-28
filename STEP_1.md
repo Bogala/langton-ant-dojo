@@ -119,6 +119,58 @@ and associated types...
 yarn add @types/redux @types/recompose @types/react-redux -D
 ```
 
+Now, we can initiate and connect redux to react.
+
+Let's create a store folder under src and add a reducer
+```
+lagton-ant-app
+|_ src
+   |_ components
+      |_ App
+         |_ App.scss
+         |_ App.spec.tsx
+         |_ App.ts
+         |_ index.ts
+   |_ store
+      |_ index.ts
+      |_ reducer.spec.ts
+      |_ reducer.ts
+   |_ stories
+      |_ index.tsx
+   |_ index.ts
+   |_ registerServiceWorker.ts
+[...]
+```
+
+__reducer.spec.ts__
+``` typescript
+import reducer from './reducer';
+import { Action } from 'redux';
+
+describe('reducer', () => {
+  it('should initialise with 1', () => {
+    const actual = reducer(undefined, { type: null} as Action);
+    expect(actual).toBeNull();
+  });
+});
+```
+
+__reducer.ts__
+``` typescript
+import { Action } from 'redux';
+
+const initialState = null;
+
+const reducer = (state = initialState, action: Action) => {
+  switch (action.type) {
+    default:
+      return state;
+  }
+};
+
+export default reducer;
+```
+
 ## Connect our reducer with our react application
 
 ## Exercice Solution
