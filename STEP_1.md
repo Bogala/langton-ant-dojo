@@ -114,9 +114,9 @@ We have to install packages redux, react-redux and recompose (used for [Higher-O
 yarn add redux recompose react-redux
 ```
 
-and associated types...
+, associated types and mock system...
 ``` shell
-yarn add @types/redux @types/recompose @types/react-redux -D
+yarn add @types/redux @types/recompose @types/react-redux redux-mock-store @types/redux-mock-store -D
 ```
 
 Now, we can initiate and connect redux to react.
@@ -144,13 +144,19 @@ lagton-ant-app
 
 __reducer.spec.ts__
 ``` typescript
-import reducer from './reducer';
+import { MainState, default as  reducer } from './reducer';
 import { Action } from 'redux';
 
 describe('reducer', () => {
-  it('should initialise with null', () => {
+  it('should initialise with MainState Interface', () => {
     const actual = reducer(undefined, { type: null} as Action);
-    expect(actual).toBeNull();
+    expect(actual as MainState).toBeTruthy();
+  });
+
+  it('should pass state by cdefault', () => {
+    class MockMainState implements MainState {}
+    const actual = reducer(new MockMainState(), { type: null} as Action);
+    expect(actual instanceof MockMainState).toBeTruthy();
   });
 });
 ```
@@ -159,16 +165,18 @@ __reducer.ts__
 ``` typescript
 import { Action } from 'redux';
 
-const initialState = null;
+export interface MainState {
 
-const reducer = (state = initialState, action: Action) => {
+}
+
+const initialState: MainState = {};
+
+export default (state: MainState = initialState, action: Action) => {
   switch (action.type) {
     default:
       return state;
   }
 };
-
-export default reducer;
 ```
 
 Now make a store with this reducer
@@ -186,6 +194,101 @@ export const configureStore = () => (
 ```
 
 ## Connect our reducer with our react application
+To connect redux and react, we have two steps :
+1. Initiate and maintain a store instance
+1. Connect each component who need the reducer
+
+### Connect the store to the application
+The file to update for this is our main `index.tsx`
+We have to surround our app component with a react-redux `Provider`
+``` tsx
+[...]
+import { Provider } from 'react-redux';
+import { configureStore } from './store/index';
+
+ReactDOM.render(
+  <Provider store={configureStore()}>
+    <App />
+  </Provider>,
+  document.getElementById('root') as HTMLElement
+);
+[...]
+```
+
+### Prepare component to be enhanced
+To prepare App component, we have to make a typing for the props :
+* An interface for binding elements
+* An interface for event elements
+* One interface to rule them all, to find them, to bring them all and in the darkness bind them.
+
+Add these interfaces to your __App.tsx__
+``` tsx
+[...]
+export interface AppBindingProps {}
+export interface AppEventProps {}
+export interface AppProps extends AppBindingProps, AppEventProps {}
+
+export default (props: AppProps) => (
+[...]
+```
+### Enhance component
+Add a new file __App.container.spec.tsx__
+``` tsx
+import 'core-js';
+import 'jest-enzyme';
+
+import * as Adapter from 'enzyme-adapter-react-16';
+import * as React from 'react';
+
+import { configure, shallow, ShallowWrapper } from 'enzyme';
+
+import configureStore from 'redux-mock-store';
+
+import App from './';
+
+// tslint:disable-next-line:no-any
+configure({ adapter: new Adapter() });
+
+const mockStore = configureStore();
+let container: ShallowWrapper;
+
+describe('App container', () => {
+    beforeEach(() => {
+        const store = mockStore({});
+        container = shallow(<App />, { context: { store } });
+    });
+
+    it('renders without crashing', () => {
+        expect(container.length).toEqual(1);
+    });
+});
+```
+
+and associated __App.container.ts__ 
+``` typescript
+import { MapStateToProps, MapDispatchToProps, connect } from 'react-redux';
+import { MainState } from '../../store/reducer';
+import App, { AppProps, AppBindingProps, AppEventProps } from './App';
+
+const mapStateToProps: MapStateToProps<AppBindingProps, AppProps, MainState> = (state, props) => ({});
+const mapDispatchToProps: MapDispatchToProps<AppEventProps, AppProps> = (dispatch, ownProps) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
+```
+
+you can understand mapStateToProps types like :
+```typescript
+mapStateToProps = (state: MainState, props: AppProps):AppBindingProps => ({});
+```
+
+Not forget to change index.ts reference :
+``` typescript
+import App from './App.container';
+```
+
+>
+Now your application is initialized, you can go to the [next step : A grid and an Ant](./STEP_2.md)
+>
 
 ## Exercice Solution
 [_Download Example_](https://github.com/Bogala/langton-ant-dojo/archive/step1.zip)
