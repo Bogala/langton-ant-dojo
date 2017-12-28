@@ -14,7 +14,7 @@ Langton's ant can also be described as a cellular automaton, where the grid is c
 ### TDD
 Test-driven development (TDD) is a software development process that relies on the repetition of a very short development cycle: Requirements are turned into very specific test cases, then the software is improved to pass the new tests, only. This is opposed to software development that allows software to be added that is not proven to meet requirements.
 ![TDD Cycles](https://upload.wikimedia.org/wikipedia/commons/0/0b/TDD_Global_Lifecycle.png)
-5 Steps to reproduce :
+5 Steps to reproduce every cycle:
 1. Add a new test
 2. Run all tests and verify if the new test fails
 3. Write code to pass the new test to green
@@ -23,3 +23,9 @@ Test-driven development (TDD) is a software development process that relies on t
 
 For more informations, see [Wikipedia](https://en.wikipedia.org/wiki/Test-driven_development)
 
+### TDD Against the Time
+In this type of sessions, we add one key constraint on the TDD cycle : Before each test, we launch a five minutes timer.
+* If the code compiles and the tests are green, commit!
+* Otherwise, revert!
+
+The five minute time constraint sounds fiendish doesn’t it? How can you possibly get anything done in five minutes? Well, you can, if you tackle something small enough. This exercise is designed to force you to think in small increments of functionality.
