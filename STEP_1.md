@@ -109,7 +109,15 @@ export default () => (
 ```
 
 ## Make a store with Redux and create our first reducer
+We have to install packages redux, react-redux and recompose (used for [Higher-Order Components](https://reactjs.org/docs/higher-order-components.html))
+``` shell
+yarn add redux recompose react-redux
+```
 
+and associated types...
+``` shell
+yarn add @types/redux @types/recompose @types/react-redux -D
+```
 
 ## Connect our reducer with our react application
 
