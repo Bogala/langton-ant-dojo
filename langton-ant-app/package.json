@@ -33,7 +33,8 @@
       "src/**/*.ts?(x)",
       "!src/stories/*.*",
       "!src/index.tsx",
-      "!src/registerServiceWorker.ts"
+      "!src/registerServiceWorker.ts",
+      "!src/store/index.ts"
     ]
   },
   "devDependencies": {
@@ -52,11 +53,13 @@
     "@types/react-test-renderer": "^16.0.0",
     "@types/recompose": "^0.24.4",
     "@types/redux": "^3.6.0",
+    "@types/redux-mock-store": "^0.0.12",
     "@types/storybook__addon-knobs": "^3.2.1",
     "@types/storybook__react": "^3.0.5",
     "enzyme": "^3.2.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "jest-enzyme": "^4.0.1",
-    "react-test-renderer": "^16.2.0"
+    "react-test-renderer": "^16.2.0",
+    "redux-mock-store": "^1.4.0"
   }
 }

@@ -1,12 +1,14 @@
 import { Action } from 'redux';
 
-const initialState = null;
+export interface MainState {
 
-const reducer = (state = initialState, action: Action) => {
+}
+
+const initialState: MainState = {};
+
+export default (state: MainState = initialState, action: Action) => {
   switch (action.type) {
     default:
       return state;
   }
 };
-
-export default reducer;

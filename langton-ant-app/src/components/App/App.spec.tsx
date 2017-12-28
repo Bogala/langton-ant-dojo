@@ -8,7 +8,7 @@ import * as ReactDOM from 'react-dom';
 import { configure, shallow } from 'enzyme';
 import { CircularProgress } from 'material-ui';
 
-import App from './';
+import App from './App';
 
 // tslint:disable-next-line:no-any
 configure({ adapter: new Adapter() });

@@ -318,6 +318,12 @@
   dependencies:
     "@types/react" "*"
 
+"@types/redux-mock-store@^0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@types/redux-mock-store/-/redux-mock-store-0.0.12.tgz#0c1b298e62aa5da273bcd347c73ebe629e9a1523"
+  dependencies:
+    redux "^3.6.0"
+
 "@types/redux@^3.6.0":
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/@types/redux/-/redux-3.6.0.tgz#f1ebe1e5411518072e4fdfca5c76e16e74c1399a"
@@ -7592,6 +7598,12 @@ reduce-function-call@^1.0.1:
   resolved "https://registry.yarnpkg.com/reduce-function-call/-/reduce-function-call-1.0.2.tgz#5a200bf92e0e37751752fe45b0ab330fd4b6be99"
   dependencies:
     balanced-match "^0.4.2"
+
+redux-mock-store@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/redux-mock-store/-/redux-mock-store-1.4.0.tgz#cdc87650f5759f293588fecc9cac2b057d95190d"
+  dependencies:
+    lodash.isplainobject "^4.0.6"
 
 redux@*, redux@^3.6.0, redux@^3.7.2:
   version "3.7.2"
