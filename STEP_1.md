@@ -144,13 +144,13 @@ lagton-ant-app
 
 __reducer.spec.ts__
 ``` typescript
-import reducer from './reducer';
+import { MainState, default as  reducer } from './reducer';
 import { Action } from 'redux';
 
 describe('reducer', () => {
-  it('should initialise with null', () => {
+  it('should initialise with MainState Interface', () => {
     const actual = reducer(undefined, { type: null} as Action);
-    expect(actual).toBeNull();
+    expect(actual as MainState).toBeTruthy();
   });
 });
 ```
@@ -159,16 +159,18 @@ __reducer.ts__
 ``` typescript
 import { Action } from 'redux';
 
-const initialState = null;
+export interface MainState {
 
-const reducer = (state = initialState, action: Action) => {
+}
+
+const initialState: MainState = {};
+
+export default (state: MainState = initialState, action: Action) => {
   switch (action.type) {
     default:
       return state;
   }
 };
-
-export default reducer;
 ```
 
 Now make a store with this reducer
@@ -186,6 +188,15 @@ export const configureStore = () => (
 ```
 
 ## Connect our reducer with our react application
+To connect redux and react, we have two steps :
+1. Initiate and maintain a store instance
+1. Connect each component who need the reducer
+
+### Connect the store to the application
+
+### Prepare component to be enhanced
+
+### Enhance component
 
 ## Exercice Solution
 [_Download Example_](https://github.com/Bogala/langton-ant-dojo/archive/step1.zip)
