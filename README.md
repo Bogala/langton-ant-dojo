@@ -29,3 +29,9 @@ In this type of sessions, we add one key constraint on the TDD cycle : Before ea
 * Otherwise, revert!
 
 The five minute time constraint sounds fiendish doesn’t it? How can you possibly get anything done in five minutes? Well, you can, if you tackle something small enough. This exercise is designed to force you to think in small increments of functionality.
+
+### Code coverage
+All __your__ code must be covered by unit tests. Our technology permit this : React, TypeScript, Jest and Enzyme.
+
+### Types
+In this case, we'll use Typescript to verify coherence between objects. We'll avoid maximum `any` (implicit or not).
