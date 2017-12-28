@@ -94,7 +94,7 @@ __App.scss__
 ```
 
 __App.tsx__
-```typescript
+``` tsx
 import * as React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { CircularProgress } from 'material-ui';
@@ -169,6 +169,20 @@ const reducer = (state = initialState, action: Action) => {
 };
 
 export default reducer;
+```
+
+Now make a store with this reducer
+``` typescript
+import { createStore } from 'redux';
+import reducer from './reducer';
+
+export const configureStore = () => (
+    createStore(
+        reducer,
+        // tslint:disable-next-line:no-any
+        (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__()
+    )
+);
 ```
 
 ## Connect our reducer with our react application
