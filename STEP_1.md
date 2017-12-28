@@ -94,7 +94,7 @@ __App.scss__
 ```
 
 __App.tsx__
-```typescript
+``` tsx
 import * as React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { CircularProgress } from 'material-ui';
@@ -117,6 +117,72 @@ yarn add redux recompose react-redux
 and associated types...
 ``` shell
 yarn add @types/redux @types/recompose @types/react-redux -D
+```
+
+Now, we can initiate and connect redux to react.
+
+Let's create a store folder under src and add a reducer
+```
+lagton-ant-app
+|_ src
+   |_ components
+      |_ App
+         |_ App.scss
+         |_ App.spec.tsx
+         |_ App.ts
+         |_ index.ts
+   |_ store
+      |_ index.ts
+      |_ reducer.spec.ts
+      |_ reducer.ts
+   |_ stories
+      |_ index.tsx
+   |_ index.ts
+   |_ registerServiceWorker.ts
+[...]
+```
+
+__reducer.spec.ts__
+``` typescript
+import reducer from './reducer';
+import { Action } from 'redux';
+
+describe('reducer', () => {
+  it('should initialise with null', () => {
+    const actual = reducer(undefined, { type: null} as Action);
+    expect(actual).toBeNull();
+  });
+});
+```
+
+__reducer.ts__
+``` typescript
+import { Action } from 'redux';
+
+const initialState = null;
+
+const reducer = (state = initialState, action: Action) => {
+  switch (action.type) {
+    default:
+      return state;
+  }
+};
+
+export default reducer;
+```
+
+Now make a store with this reducer
+``` typescript
+import { createStore } from 'redux';
+import reducer from './reducer';
+
+export const configureStore = () => (
+    createStore(
+        reducer,
+        // tslint:disable-next-line:no-any
+        (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__()
+    )
+);
 ```
 
 ## Connect our reducer with our react application
