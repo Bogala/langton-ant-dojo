@@ -16,10 +16,10 @@ Test-driven development (TDD) is a software development process that relies on t
 ![TDD Cycles](https://upload.wikimedia.org/wikipedia/commons/0/0b/TDD_Global_Lifecycle.png)
 5 Steps to reproduce every cycle:
 1. Add a new test
-2. Run all tests and verify if the new test fails
-3. Write code to pass the new test to green
-4. Run all tests and verify all are green
-5. Refactor
+1. Run all tests and verify if the new test fails
+1. Write code to pass the new test to green
+1. Run all tests and verify all are green
+1. Refactor
 
 For more informations, see [Wikipedia](https://en.wikipedia.org/wiki/Test-driven_development)
 
