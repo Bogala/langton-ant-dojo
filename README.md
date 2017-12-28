@@ -35,3 +35,5 @@ All __your__ code must be covered by unit tests. Our technology permit this : Re
 
 ### Types
 In this case, we'll use Typescript to verify coherence between objects. We'll avoid maximum `any` (implicit or not).
+
+> Now we can begin the dojo with the [first step : Create React App](./STEP_1.md)
