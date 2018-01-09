@@ -13,22 +13,28 @@ interface LineProps {
 
 interface CellProps {
     cellValue: boolean;
+    hasAnt: boolean;
 }
 
 const Line = ({ line, index }: LineProps) => (
     <tr>
         {
             line.map((cell, idx) => (
-                <Cell cellValue={cell} key={`cell_${index}${idx}`} />
+                <Cell cellValue={cell} key={`cell_${index}${idx}`} hasAnt={(index === 10 && idx === 10)} />
             ))
         }
     </tr>
 );
 
-const Cell = ({ cellValue }: CellProps) => (
+const Cell = ({ cellValue, hasAnt }: CellProps) => (
     <td>
         <div className="box">
-            <div className="content" />
+            <div className="content">
+            {
+                hasAnt ? 
+                    <img src="ant.png" /> : ''
+            }
+            </div>
         </div>
     </td>
 );
