@@ -6,10 +6,11 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { configure, shallow } from 'enzyme';
-import { CircularProgress, AppBar, IconButton } from 'material-ui';
+import { AppBar, IconButton, Card } from 'material-ui';
 import AvPlayArrow from 'material-ui/svg-icons/av/play-arrow';
 
 import App from './App';
+import Grid from './Grid';
 
 // tslint:disable-next-line:no-any
 configure({ adapter: new Adapter() });
@@ -18,12 +19,6 @@ describe('App.tsx', () => {
   it('renders without crashing', () => {
     const div = document.createElement('div');
     ReactDOM.render(<App />, div);
-  });
-
-  it('App component contains default loader in material design', () => {
-    const wrapper = shallow(<App />);
-    expect(wrapper.find('.center')).toHaveLength(1);
-    expect(wrapper.find(CircularProgress)).toHaveLength(1);
   });
 
   it('App component must contains header app bar', () => {
@@ -44,5 +39,11 @@ describe('App.tsx', () => {
   it('AppBar s title can be defined', () => {
     const wrapper = shallow(<App title="Langon Ant : First generation" />);
     expect(wrapper.find(AppBar).prop('title')).toBe('Langon Ant : First generation');
+  });
+
+  it('Must have the grid in a Card', () => {
+    const wrapper = shallow(<App title="Langon Ant : First generation" />);
+    expect(wrapper.find(Card).length).toBe(1);
+    expect(wrapper.find(Card).find(Grid).length).toBe(1);
   });
 });

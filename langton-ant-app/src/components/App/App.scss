@@ -1,6 +1,18 @@
-.center {
-  position: fixed;
+
+.stretch {
+  width: 83vmin;
+  height: 83vmin;
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+.stretch::before {
+  content: "";
+  display: block;
+  margin-top: 10px;
+}
+
+.md-card {
+  padding: 3px;
 }
