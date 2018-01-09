@@ -34,7 +34,8 @@
       "!src/stories/*.*",
       "!src/index.tsx",
       "!src/registerServiceWorker.ts",
-      "!src/store/index.ts"
+      "!src/store/index.ts",
+      "!src/**/*.stories.tsx"
     ]
   },
   "devDependencies": {
