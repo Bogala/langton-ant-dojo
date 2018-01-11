@@ -1,4 +1,4 @@
-# First rules and Redux
+# First rules and Component State
 
 > Work in progress ... 
 
