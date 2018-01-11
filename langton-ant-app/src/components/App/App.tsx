@@ -11,15 +11,7 @@ export interface AppEventProps { }
 export interface AppProps extends AppBindingProps, AppEventProps { }
 
 export default ({ title }: AppProps) => {
-  const cells: boolean[][] = new Array<Array<boolean>>();
-
-  for (let i = 0; i < 21; i++) {
-    const line = new Array<boolean>();
-    for (let j = 0; j < 21; j++) {
-      line.push(false);
-    }
-    cells.push(line);
-  }
+  const cells: boolean[][] = new Array<Array<boolean>>(21).fill(new Array<boolean>(21).fill(false));
 
   return (
     <MuiThemeProvider>

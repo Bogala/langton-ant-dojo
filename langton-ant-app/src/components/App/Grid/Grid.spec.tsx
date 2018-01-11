@@ -9,16 +9,7 @@ import { configure, mount } from 'enzyme';
 import Grid from './';
 
 const initiateCells = (width: number, height: number) => {
-  const cells: boolean[][] = new Array<Array<boolean>>();
-
-  for (let i = 0; i < height; i++) {
-    const line = new Array<boolean>();
-    for (let j = 0; j < width; j++) {
-      line.push(false);
-    }
-    cells.push(line);
-  }
-  return cells;
+  return new Array<Array<boolean>>(height).fill(new Array<boolean>(width).fill(false));
 };
 
 const mountGrid = (width: number, height: number) => {
