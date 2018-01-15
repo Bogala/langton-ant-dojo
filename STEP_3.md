@@ -109,7 +109,7 @@ class MyComponent extends React.Component<ComponentProps, ComponentState> {
       <span>
         {{componentName}} works !
         <br />
-        It is {this.state.author}.
+        Thanks {this.state.author}.
       </span>
     );
   }
@@ -123,6 +123,86 @@ constructor(props: ComponentProps) {
 }
 ```
 Class components should always call the base constructor with props.
+
+### Update component local state
+Now, we add and input to update author value :
+``` jsx
+interface ComponentProps {
+  componentName?: string;
+}
+interface ComponentState {
+  author: string;
+}
+class MyComponent extends React.Component<ComponentProps, ComponentState> {
+  constructor(props: ComponentProps) {
+    super(props);
+    this.state = { author: 'Benoit' } as ComponentState;
+  }
+
+  render() {
+    let { componentName } = this.props;
+    if (!componentName) {
+      componentName = 'New Component';
+    }
+    return (
+      <div>
+        <p><input type="text" value={this.state.author} /></p>
+        <p>
+          <span>
+            {{ componentName }} works !
+          <br />
+            Thanks {this.state.author}.
+        </span>
+        </p>
+      </div>
+    );
+  }
+}
+```
+
+If you test this and try to update value, that doesn't work. Why? The React one-way binding.
+
+If you want update value, you have to implement the event `onChange`.
+``` jsx
+interface ComponentProps {
+  componentName?: string;
+}
+interface ComponentState {
+  author: string;
+}
+class MyComponent extends React.Component<ComponentProps, ComponentState> {
+  constructor(props: ComponentProps) {
+    super(props);
+    this.state = { author: 'Benoit' } as ComponentState;
+  }
+
+  onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ author: (e.target as HTMLInputElement).value });
+  }
+
+  render() {
+    let { componentName } = this.props;
+    if (!componentName) {
+      componentName = 'New Component';
+    }
+    return (
+      <div>
+        <p><input type="text" value={this.state.author} onChange={this.onChange} /></p>
+        <p>
+          <span>
+            {{ componentName }} works !
+          <br />
+            Thanks {this.state.author}.
+        </span>
+        </p>
+      </div>
+    );
+  }
+}
+```
+You can try and enjoy !
+
+Now you're armed to start the next step.
 
 ## Rules, expected behavior
 Remember : our Langton's Ant moves according this 2 rules :
