@@ -14,7 +14,7 @@
   "dependencies": {
     "material-ui": "^0.20.0",
     "react": "^16.2.0",
-    "react-ats-scripts": "1.0.48",
+    "react-ats-scripts": "1.0.50",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
     "recompose": "^0.26.0",

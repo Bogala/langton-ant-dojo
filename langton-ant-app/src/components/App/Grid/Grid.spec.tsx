@@ -21,19 +21,19 @@ const mountGrid = (width: number, height: number) => {
 configure({ adapter: new Adapter() });
 
 describe('Grid.tsx', () => {
-  it('Must contains a table 21x21', () => {
+  test('Must contains a table 21x21', () => {
     const wrapper = mountGrid(21, 21);
     expect(wrapper.find('tr').length).toBe(21);
     expect(wrapper.find('td').length).toBe(441);
   });
 
-  it('Ant must be in the center', () => {
+  test('Ant must be in the center', () => {
     const wrapper = mountGrid(21, 21);
     expect(wrapper.find('img').length).toBe(1);
     wrapper.find('tr').forEach((line, y) => {
       line.find('td').forEach((child, x) => {
         const expectedCount = (y === 10 && x === 10) ? 1 : 0;
-        expect(child.find('img').length).toBe(expectedCount);
+        expect(child.find('.ant').length).toBe(expectedCount);
       });
     });
   });

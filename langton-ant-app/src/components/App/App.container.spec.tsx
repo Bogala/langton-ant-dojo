@@ -22,7 +22,7 @@ describe('App container', () => {
         container = shallow(<App />, { context: { store } });
     });
 
-    it('renders without crashing', () => {
+    test('renders without crashing', () => {
         expect(container.length).toEqual(1);
     });
 });

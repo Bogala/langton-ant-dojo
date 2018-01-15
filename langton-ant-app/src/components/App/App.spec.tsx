@@ -16,32 +16,32 @@ import Grid from './Grid';
 configure({ adapter: new Adapter() });
 
 describe('App.tsx', () => {
-  it('renders without crashing', () => {
+  test('renders without crashing', () => {
     const div = document.createElement('div');
     ReactDOM.render(<App />, div);
   });
 
-  it('App component must contains header app bar', () => {
+  test('App component must contains header app bar', () => {
     const wrapper = shallow(<App />);
     expect(wrapper.find(AppBar)).toHaveLength(1);
   });
 
-  it('AppBar must have a default title', () => {
+  test('AppBar must have a default title', () => {
     const wrapper = shallow(<App />);
     expect(wrapper.find(AppBar).prop('title')).toBe('Langton Ant');
   });
 
-  it('AppBar must have a play buttone', () => {
+  test('AppBar must have a play buttone', () => {
     const {iconElementLeft} = shallow(<App />).find(AppBar).props();
     expect(iconElementLeft).toEqual(<IconButton><AvPlayArrow /></IconButton>);
   });
 
-  it('AppBar s title can be defined', () => {
+  test('AppBar s title can be defined', () => {
     const wrapper = shallow(<App title="Langon Ant : First generation" />);
     expect(wrapper.find(AppBar).prop('title')).toBe('Langon Ant : First generation');
   });
 
-  it('Must have the grid in a Card', () => {
+  test('Must have the grid in a Card', () => {
     const wrapper = shallow(<App title="Langon Ant : First generation" />);
     expect(wrapper.find(Card).length).toBe(1);
     expect(wrapper.find(Card).find(Grid).length).toBe(1);

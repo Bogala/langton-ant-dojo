@@ -26,18 +26,16 @@ const Line = ({ line, index }: LineProps) => (
     </tr>
 );
 
-const Cell = ({ cellValue, hasAnt }: CellProps) => (
-    <td>
-        <div className="box">
-            <div className="content">
-            {
-                hasAnt ? 
-                    <img src="ant.png" /> : ''
-            }
+const Cell = ({ cellValue, hasAnt }: CellProps) => {
+    const styleAntOrNot = hasAnt ? 'content ant' : 'content';
+    return (
+        <td>
+            <div className="box">
+                <div className={styleAntOrNot} />
             </div>
-        </div>
-    </td>
-);
+        </td>
+    );
+};
 
 export default ({ cells }: GridProps) => (
     <table>
