@@ -49,7 +49,7 @@ interface ComponentProps {
 };
 class MyComponent extends React.Component<ComponentProps> {
   render() {
-    const { componentName } = this.props; //disintegration
+    let { componentName } = this.props; //disintegration
     if (!componentName) { 
       componentName = 'New Component'; //define default value
     }
@@ -63,7 +63,66 @@ The class slightly complicates things : we have to define manually the default v
 But this is useful to implement a new react functionality : __component state__ .
 
 ### Adding a local state to a class
-> Under construction
+1. Define a State interface and add a line with `state` to show a date
+``` jsx
+interface ComponentProps {
+  componentName?: string;
+}
+interface ComponentState {
+  author: string;
+}
+class MyComponent extends React.Component<ComponentProps, ComponentState> {
+  render() {
+    let { componentName } = this.props; //disintegration
+    if (!componentName) { 
+      componentName = 'New Component'; //define default value
+    }
+    return (
+      <span>
+        {{componentName}} works !
+        <br />
+        Thanks {this.state.author}.
+      </span>
+    );
+  }
+}
+```
+2. Add a class constructor that assigns the initial this.state:
+``` jsx
+interface ComponentProps {
+  componentName?: string;
+}
+interface ComponentState {
+  author: string;
+}
+class MyComponent extends React.Component<ComponentProps, ComponentState> {
+  constructor(props: ComponentProps) {
+    super(props);
+    this.state = {author: 'Benoit'} as ComponentState;
+  }
+  render() {
+    let { componentName } = this.props; //disintegration
+    if (!componentName) { 
+      componentName = 'New Component'; //define default value
+    }
+    return (
+      <span>
+        {{componentName}} works !
+        <br />
+        It is {this.state.author}.
+      </span>
+    );
+  }
+}
+```
+Note how we pass `props` to the base constructor:
+``` typescript
+constructor(props: ComponentProps) {
+  super(props);
+  this.state = {author: 'Benoit'} as ComponentState;
+}
+```
+Class components should always call the base constructor with props.
 
 ## Rules, expected behavior
 Remember : our Langton's Ant moves according this 2 rules :
