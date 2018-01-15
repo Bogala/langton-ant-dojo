@@ -10,24 +10,37 @@ export interface AppBindingProps {
 export interface AppEventProps { }
 export interface AppProps extends AppBindingProps, AppEventProps { }
 
-export default ({ title }: AppProps) => {
-  const cells: boolean[][] = new Array<Array<boolean>>(21).fill(new Array<boolean>(21).fill(false));
+export interface AppState {
+  cells: boolean[][];
+}
 
-  return (
-    <MuiThemeProvider>
-      <div>
-        <AppBar
-          title={title || 'Langton Ant'}
-          iconElementLeft={<IconButton><AvPlayArrow /></IconButton>}
-        />
+class App extends React.Component<AppProps, AppState> {
+  constructor(props: AppProps) {
+    super(props);
+    this.state = { cells: new Array<Array<boolean>>(21).fill(new Array<boolean>(21).fill(false)) } as AppState;
+  }
+
+  render() {
+    const { title } = this.props;
+    const { cells } = this.state;
+    return (
+      <MuiThemeProvider>
         <div>
-          <div className="stretch">
-            <Card className="md-card">
-              <Grid cells={cells} />
-            </Card>
+          <AppBar
+            title={title || 'Langton Ant'}
+            iconElementLeft={<IconButton><AvPlayArrow /></IconButton>}
+          />
+          <div>
+            <div className="stretch">
+              <Card className="md-card">
+                <Grid cells={cells} />
+              </Card>
+            </div>
           </div>
         </div>
-      </div>
-    </MuiThemeProvider>
-  );
-};
+      </MuiThemeProvider>
+    );
+  }
+}
+
+export default App;

@@ -15,7 +15,7 @@ import Grid from './Grid';
 // tslint:disable-next-line:no-any
 configure({ adapter: new Adapter() });
 
-describe('App.tsx', () => {
+describe('Step 2 : a grid and an ant', () => {
   test('renders without crashing', () => {
     const div = document.createElement('div');
     ReactDOM.render(<App />, div);
@@ -45,5 +45,17 @@ describe('App.tsx', () => {
     const wrapper = shallow(<App title="Langon Ant : First generation" />);
     expect(wrapper.find(Card).length).toBe(1);
     expect(wrapper.find(Card).find(Grid).length).toBe(1);
+  });
+});
+
+describe('Step 3: first rules and component state', () => {
+  test('Cells definition must be in state', () => {
+    const wrapper = shallow(<App />);
+    expect(wrapper.find(Grid).props().cells).toBe(wrapper.state().cells);
+  });
+  
+  test('Cells must be initiated with 21x21xfalse', () => {
+    const wrapper = shallow(<App />);
+    expect(wrapper.state().cells).toEqual(new Array<Array<boolean>>(21).fill(new Array<boolean>(21).fill(false)));
   });
 });

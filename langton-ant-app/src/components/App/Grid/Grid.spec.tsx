@@ -29,7 +29,7 @@ describe('Grid.tsx', () => {
 
   test('Ant must be in the center', () => {
     const wrapper = mountGrid(21, 21);
-    expect(wrapper.find('img').length).toBe(1);
+    expect(wrapper.find('.ant').length).toBe(1);
     wrapper.find('tr').forEach((line, y) => {
       line.find('td').forEach((child, x) => {
         const expectedCount = (y === 10 && x === 10) ? 1 : 0;
