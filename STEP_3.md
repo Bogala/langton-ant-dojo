@@ -6,7 +6,7 @@ Remember : our Langton's Ant moves according this 2 rules :
 
 Please implement this rules on play button's click.
 
-To illustrate, I have made an example mapping for 10 steps :
+To illustrate, I have made an example mapping for 10 steps (You can use it to make your unit tests) :
 <table>
   <tr><th>Step</th><th>Before</th><th>After</th></tr>
   <tr><th>1</th><td><img src="./images/gen1.png" /></td><td><img src="./images/gen2.png" /></td>
