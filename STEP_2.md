@@ -68,7 +68,7 @@ interface ImageProps {
 if the you have an optional prop, it can be a good idea to make a default value.
 ``` jsx
 const Image = ({img = './img/picture.png'}: ImageProps) => (
-  <img src={props.img} />
+  <img src={img} />
 )
 
 const Parent = () => (
@@ -133,7 +133,7 @@ expect(wrapper.find('#foo')).toHaveLength(1);
 import Foo from '../components/Foo';
 
 const wrapper = shallow(<MyComponent />);
-expect(wrapper.find(Foo)).toHaveLengthh(1);
+expect(wrapper.find(Foo)).toHaveLength(1);
 ```
 
 * Component Display Name:
