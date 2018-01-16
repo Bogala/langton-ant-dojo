@@ -49,7 +49,7 @@ interface ComponentProps {
 };
 class MyComponent extends React.Component<ComponentProps> {
   render() {
-    let { componentName } = this.props; //disintegration
+    let { componentName } = this.props; //destructuration
     if (!componentName) { 
       componentName = 'New Component'; //define default value
     }
@@ -73,7 +73,7 @@ interface ComponentState {
 }
 class MyComponent extends React.Component<ComponentProps, ComponentState> {
   render() {
-    let { componentName } = this.props; //disintegration
+    let { componentName } = this.props; //destructuration
     if (!componentName) { 
       componentName = 'New Component'; //define default value
     }
@@ -101,7 +101,7 @@ class MyComponent extends React.Component<ComponentProps, ComponentState> {
     this.state = {author: 'Benoit'} as ComponentState;
   }
   render() {
-    let { componentName } = this.props; //disintegration
+    let { componentName } = this.props; //destructuration
     if (!componentName) { 
       componentName = 'New Component'; //define default value
     }
