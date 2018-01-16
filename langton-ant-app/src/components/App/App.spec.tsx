@@ -5,7 +5,7 @@ import * as Adapter from 'enzyme-adapter-react-16';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { configure, shallow } from 'enzyme';
+import { configure, shallow, mount, MountRendererProps } from 'enzyme';
 import { AppBar, IconButton, Card } from 'material-ui';
 import AvPlayArrow from 'material-ui/svg-icons/av/play-arrow';
 
@@ -15,7 +15,7 @@ import Grid from './Grid';
 // tslint:disable-next-line:no-any
 configure({ adapter: new Adapter() });
 
-describe('Step 2 : a grid and an ant', () => {
+describe('[App]Step 2 : a grid and an ant', () => {
   test('renders without crashing', () => {
     const div = document.createElement('div');
     ReactDOM.render(<App />, div);
@@ -48,14 +48,21 @@ describe('Step 2 : a grid and an ant', () => {
   });
 });
 
-describe('Step 3: first rules and component state', () => {
+describe('[App]Step 3: first rules and component state', () => {
   test('Cells definition must be in state', () => {
     const wrapper = shallow(<App />);
     expect(wrapper.find(Grid).props().cells).toBe(wrapper.state().cells);
   });
-  
+
   test('Cells must be initiated with 21x21xfalse', () => {
     const wrapper = shallow(<App />);
-    expect(wrapper.state().cells).toEqual(new Array<Array<boolean>>(21).fill(new Array<boolean>(21).fill(false)));
+    const cells = new Array<Array<boolean>>(21).fill(new Array<boolean>(21).fill(false));
+    expect(wrapper.state().cells).toEqual(cells);
+  });
+
+  test('Ant must be in state', () => {
+    const wrapper = mount(<App />, {context: {}} as MountRendererProps);
+    expect(wrapper.find(Grid).props().ant).toBeDefined();
+    expect(wrapper.find(Grid).props().ant).toBe(wrapper.state().ant);
   });
 });

@@ -2,7 +2,7 @@ import * as React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { AppBar, IconButton, Card } from 'material-ui';
 import AvPlayArrow from 'material-ui/svg-icons/av/play-arrow';
-import Grid from './Grid';
+import Grid, { Ant } from './Grid';
 
 export interface AppBindingProps {
   title?: string;
@@ -12,17 +12,21 @@ export interface AppProps extends AppBindingProps, AppEventProps { }
 
 export interface AppState {
   cells: boolean[][];
+  ant: Ant;
 }
 
 class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props);
-    this.state = { cells: new Array<Array<boolean>>(21).fill(new Array<boolean>(21).fill(false)) } as AppState;
+    this.state = { 
+      cells: new Array<Array<boolean>>(21).fill(new Array<boolean>(21).fill(false)), 
+      ant: new Ant() 
+    } as AppState;
   }
 
   render() {
     const { title } = this.props;
-    const { cells } = this.state;
+    const { cells, ant } = this.state;
     return (
       <MuiThemeProvider>
         <div>
@@ -33,7 +37,7 @@ class App extends React.Component<AppProps, AppState> {
           <div>
             <div className="stretch">
               <Card className="md-card">
-                <Grid cells={cells} />
+                <Grid cells={cells} ant={ant} />
               </Card>
             </div>
           </div>
