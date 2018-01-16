@@ -33,8 +33,8 @@ describe('[Grid]Step 2 : a grid and an ant', () => {
 });
 
 describe('[Grid]Step 3: first rules and component state', () => {
-  test('And must be defined in props', () => {
-    const wrapper = mountGridWithAnt(21, 21, { x: 11, y: 9 });
+  test('Ant must be defined in props', () => {
+    const wrapper = mountGridWithAnt(21, 21, { x: 11, y: 9, rotation: 0 });
     expect(wrapper.find('.ant').length).toBe(1);
     wrapper.find('tr').forEach((line, y) => {
       line.find('td').forEach((child, x) => {
@@ -60,6 +60,18 @@ describe('[Grid]Step 3: first rules and component state', () => {
       line.find('td').forEach((child, x) => {
         const expectedCount = (cells[y][x]) ? 1 : 0;
         expect(child.find('.altcontent').length).toBe(expectedCount);
+      });
+    });
+  });
+
+  test('Ant must be rotated as defined in props', () => {
+    const wrapper = mountGridWithAnt(21, 21, { x: 11, y: 9, rotation: 90 });
+    expect(wrapper.find('.ant').length).toBe(0);
+    expect(wrapper.find('.ant90').length).toBe(1);
+    wrapper.find('tr').forEach((line, y) => {
+      line.find('td').forEach((child, x) => {
+        const expectedCount = (y === 9 && x === 11) ? 1 : 0;
+        expect(child.find('.ant90').length).toBe(expectedCount);
       });
     });
   });

@@ -10,10 +10,12 @@ export interface GridProps extends GridBindingProps, GridEventProps { }
 export class Ant {
     public x: number;
     public y: number;
+    public rotation: number;
 
-    constructor(x: number = 10, y: number = 10) {
+    constructor(x: number = 10, y: number = 10, rotation: number = 0) {
         this.x = x;
         this.y = y;
+        this.rotation = rotation;
     }
 }
 
@@ -25,7 +27,7 @@ interface LineProps {
 
 interface CellProps {
     cellValue: boolean;
-    hasAnt: boolean;
+    ant?: Ant; 
 }
 
 const Line = ({ line, index, ant }: LineProps) => {
@@ -37,7 +39,7 @@ const Line = ({ line, index, ant }: LineProps) => {
                     <Cell
                         cellValue={cell}
                         key={`cell_${index}${idx}`}
-                        hasAnt={(index === y && idx === x)}
+                        ant={(index === y && idx === x) ? ant : undefined}
                     />
                 ))
             }
@@ -45,10 +47,10 @@ const Line = ({ line, index, ant }: LineProps) => {
     );
 };
 
-const Cell = ({ cellValue, hasAnt }: CellProps) => {
+const Cell = ({ cellValue, ant }: CellProps) => {
     const color = cellValue ? 'altcontent' : 'content';
-    const ant = hasAnt ? ' ant' : '';
-    const styleAntOrNot = `${color}${ant}`;
+    const hasAnt = (ant) ? ((ant.rotation !== 0) ? ` ant${ant.rotation}` : ' ant') : '';
+    const styleAntOrNot = `${color}${hasAnt}`;
     return (
         <td>
             <div className="box">

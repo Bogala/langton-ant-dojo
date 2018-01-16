@@ -5,12 +5,12 @@ import * as Adapter from 'enzyme-adapter-react-16';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { configure, shallow, mount, MountRendererProps } from 'enzyme';
+import { configure, shallow, mount } from 'enzyme';
 import { AppBar, IconButton, Card } from 'material-ui';
 import AvPlayArrow from 'material-ui/svg-icons/av/play-arrow';
 
 import App from './App';
-import Grid from './Grid';
+import Grid, { Ant } from './Grid';
 
 // tslint:disable-next-line:no-any
 configure({ adapter: new Adapter() });
@@ -32,8 +32,10 @@ describe('[App]Step 2 : a grid and an ant', () => {
   });
 
   test('AppBar must have a play buttone', () => {
-    const {iconElementLeft} = shallow(<App />).find(AppBar).props();
-    expect(iconElementLeft).toEqual(<IconButton><AvPlayArrow /></IconButton>);
+    const wrapper = shallow(<App />);
+    const {iconElementLeft} = wrapper.find(AppBar).props();
+    expect(iconElementLeft)
+      .toEqual(<IconButton><AvPlayArrow onClick={(wrapper.instance() as App).onClick} /></IconButton>);
   });
 
   test('AppBar s title can be defined', () => {
@@ -61,8 +63,15 @@ describe('[App]Step 3: first rules and component state', () => {
   });
 
   test('Ant must be in state', () => {
-    const wrapper = mount(<App />, {context: {}} as MountRendererProps);
+    const wrapper = mount(<App />);
     expect(wrapper.find(Grid).props().ant).toBeDefined();
     expect(wrapper.find(Grid).props().ant).toBe(wrapper.state().ant);
+  });
+
+  test('Ant must rotate 90° on white when play button clicked', async () => {
+    const wrapper = mount(<App />);
+    await wrapper.find(AvPlayArrow).simulate('click');
+    const ant: Ant = wrapper.state().ant;
+    expect(ant.rotation).toBe(90);
   });
 });

@@ -24,6 +24,10 @@ class App extends React.Component<AppProps, AppState> {
     } as AppState;
   }
 
+  onClick = () => {
+    this.setState({ant: {...this.state.ant, rotation: this.state.ant.rotation + 90}});
+  }
+
   render() {
     const { title } = this.props;
     const { cells, ant } = this.state;
@@ -32,7 +36,7 @@ class App extends React.Component<AppProps, AppState> {
         <div>
           <AppBar
             title={title || 'Langton Ant'}
-            iconElementLeft={<IconButton><AvPlayArrow /></IconButton>}
+            iconElementLeft={<IconButton><AvPlayArrow onClick={this.onClick} /></IconButton>}
           />
           <div>
             <div className="stretch">
