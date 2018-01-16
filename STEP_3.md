@@ -226,6 +226,10 @@ To illustrate, I have made an example mapping for 10 steps (You can use it to ma
   <tr><th>10</th><td><img src="./images/gen10.png" /></td><td><img src="./images/gen11.png" /></td></tr>
 </table>
 
+>
+> YES ! Your ant moves by the rules. Now, it's Refactor Time : [next step : From Component State to Redux](./STEP_4.md)
+>
+
 # Reminders
 ![TDD Cycles](https://upload.wikimedia.org/wikipedia/commons/0/0b/TDD_Global_Lifecycle.png)
 5 Steps to reproduce every cycle:
