@@ -48,9 +48,9 @@ const Line = ({ line, index, ant }: LineProps) => {
 };
 
 const Cell = ({ cellValue, ant }: CellProps) => {
-    const color = cellValue ? 'altcontent' : 'content';
+    const color = cellValue ? 'alt' : '';
     const hasAnt = (ant) ? ((ant.rotation !== 0) ? ` ant${ant.rotation}` : ' ant') : '';
-    const styleAntOrNot = `${color}${hasAnt}`;
+    const styleAntOrNot = `content${hasAnt}${color}`;
     return (
         <td>
             <div className="box">

@@ -33,7 +33,7 @@ describe('[App]Step 2 : a grid and an ant', () => {
 
   test('AppBar must have a play buttone', () => {
     const wrapper = shallow(<App />);
-    const {iconElementLeft} = wrapper.find(AppBar).props();
+    const { iconElementLeft } = wrapper.find(AppBar).props();
     expect(iconElementLeft)
       .toEqual(<IconButton><AvPlayArrow onClick={(wrapper.instance() as App).onClick} /></IconButton>);
   });
@@ -68,10 +68,25 @@ describe('[App]Step 3: first rules and component state', () => {
     expect(wrapper.find(Grid).props().ant).toBe(wrapper.state().ant);
   });
 
-  test('Ant must rotate 90° on white when play button clicked', async () => {
+  test('Ant must rotate 90° when play button clicked', async () => {
     const wrapper = mount(<App />);
     await wrapper.find(AvPlayArrow).simulate('click');
     const ant: Ant = wrapper.state().ant;
     expect(ant.rotation).toBe(90);
+  });
+
+  test('Cell is grey when play button clicked', async () => {
+    const wrapper = mount(<App />);
+    await wrapper.find(AvPlayArrow).simulate('click');
+    const ant: Ant = wrapper.state().ant;
+    const cells: boolean[][] = wrapper.state().cells;
+    expect(cells[ant.y][ant.x]).toBe(true);
+    for (let line = 0; line < cells.length; line++) {
+      for (let cell = 0; cell < cells[line].length; cell++) {
+        if (line !== ant.y && cell !== ant.x) {
+          expect(wrapper.state().cells[line][cell]).toBe(false);
+        }
+      }
+    }
   });
 });

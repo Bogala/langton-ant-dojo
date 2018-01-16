@@ -27,12 +27,7 @@ table, th, td {
 	right: 0;
 }
 
-.altcontent{
-	position:  absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
+.contentalt{
 	background-color: grey;
 }
 
@@ -64,4 +59,38 @@ table, th, td {
 	background-position: center;
 	-webkit-transform: rotate(270deg);
 	transform: rotate(270deg);
+}
+
+.antalt {
+    background: url('./ant.png') no-repeat;
+	background-size:contain;
+	background-position: center;
+	background-color: grey;
+}
+
+.ant90alt {
+    background: url('./ant.png') no-repeat;
+	background-size:contain;
+	background-position: center;
+	-webkit-transform: rotate(90deg);
+	transform: rotate(90deg);
+	background-color: grey;
+}
+
+.ant180alt {
+    background: url('./ant.png') no-repeat;
+	background-size:contain;
+	background-position: center;
+	-webkit-transform: rotate(180deg);
+	transform: rotate(180deg);
+	background-color: grey;
+}
+
+.ant270alt {
+    background: url('./ant.png') no-repeat;
+	background-size:contain;
+	background-position: center;
+	-webkit-transform: rotate(270deg);
+	transform: rotate(270deg);
+	background-color: grey;
 }
