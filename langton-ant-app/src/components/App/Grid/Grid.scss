@@ -41,3 +41,27 @@ table, th, td {
 	background-size:contain;
 	background-position: center;
 }
+
+.ant90 {
+    background: url('./ant.png') no-repeat;
+	background-size:contain;
+	background-position: center;
+	-webkit-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+
+.ant180 {
+    background: url('./ant.png') no-repeat;
+	background-size:contain;
+	background-position: center;
+	-webkit-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
+
+.ant270 {
+    background: url('./ant.png') no-repeat;
+	background-size:contain;
+	background-position: center;
+	-webkit-transform: rotate(270deg);
+	transform: rotate(270deg);
+}
