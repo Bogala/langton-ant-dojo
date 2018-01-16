@@ -80,13 +80,22 @@ describe('[App]Step 3: first rules and component state', () => {
     await wrapper.find(AvPlayArrow).simulate('click');
     const ant: Ant = wrapper.state().ant;
     const cells: boolean[][] = wrapper.state().cells;
-    expect(cells[ant.y][ant.x]).toBe(true);
+    expect(cells[ant.y][ant.x - 1]).toBe(true);
     for (let line = 0; line < cells.length; line++) {
       for (let cell = 0; cell < cells[line].length; cell++) {
-        if (line !== ant.y && cell !== ant.x) {
+        if (line !== ant.y && cell !== ant.x - 1) {
           expect(wrapper.state().cells[line][cell]).toBe(false);
         }
       }
     }
+  });
+
+  test('Ant must move left when play button clicked', async () => {
+    const wrapper = mount(<App />);
+    const initialAnt: Ant = wrapper.state().ant;
+    await wrapper.find(AvPlayArrow).simulate('click');
+    const ant: Ant = wrapper.state().ant;
+    expect(ant.x).toBe(initialAnt.x + 1);
+    expect(ant.y).toBe(initialAnt.y);
   });
 });

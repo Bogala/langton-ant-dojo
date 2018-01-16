@@ -30,7 +30,7 @@ class App extends React.Component<AppProps, AppState> {
     const line = _.clone(cells[ant.y]);
     line[ant.x] = !line[ant.x];
     cells[ant.y] = line;
-    this.setState({ant: {...this.state.ant, rotation: this.state.ant.rotation + 90}, cells: [...cells]});
+    this.setState({ant: {...this.state.ant, rotation: ant.rotation + 90, x: ant.x + 1}, cells: [...cells]});
   }
 
   render() {
