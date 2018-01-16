@@ -68,34 +68,72 @@ describe('[App]Step 3: first rules and component state', () => {
     expect(wrapper.find(Grid).props().ant).toBe(wrapper.state().ant);
   });
 
-  test('Ant must rotate 90° when play button clicked', async () => {
-    const wrapper = mount(<App />);
-    await wrapper.find(AvPlayArrow).simulate('click');
-    const ant: Ant = wrapper.state().ant;
-    expect(ant.rotation).toBe(90);
-  });
+  describe('[App]Step 3.1: First move', () => {
 
-  test('Cell is grey when play button clicked', async () => {
-    const wrapper = mount(<App />);
-    await wrapper.find(AvPlayArrow).simulate('click');
-    const ant: Ant = wrapper.state().ant;
-    const cells: boolean[][] = wrapper.state().cells;
-    expect(cells[ant.y][ant.x - 1]).toBe(true);
-    for (let line = 0; line < cells.length; line++) {
-      for (let cell = 0; cell < cells[line].length; cell++) {
-        if (line !== ant.y && cell !== ant.x - 1) {
-          expect(wrapper.state().cells[line][cell]).toBe(false);
+    test('Ant must rotate 90° when play button clicked', async () => {
+      const wrapper = mount(<App />);
+      await wrapper.find(AvPlayArrow).simulate('click');
+      const ant: Ant = wrapper.state().ant;
+      expect(ant.rotation).toBe(90);
+    });
+
+    test('Cell is grey when play button clicked', async () => {
+      const wrapper = mount(<App />);
+      await wrapper.find(AvPlayArrow).simulate('click');
+      const ant: Ant = wrapper.state().ant;
+      const cells: boolean[][] = wrapper.state().cells;
+      expect(cells[ant.y][ant.x - 1]).toBe(true);
+      for (let line = 0; line < cells.length; line++) {
+        for (let cell = 0; cell < cells[line].length; cell++) {
+          if (line !== ant.y && cell !== ant.x - 1) {
+            expect(wrapper.state().cells[line][cell]).toBe(false);
+          }
         }
       }
-    }
+    });
+
+    test('Ant must move left when play button clicked', async () => {
+      const wrapper = mount(<App />);
+      const initialAnt: Ant = wrapper.state().ant;
+      await wrapper.find(AvPlayArrow).simulate('click');
+      const ant: Ant = wrapper.state().ant;
+      expect(ant.x).toBe(initialAnt.x + 1);
+      expect(ant.y).toBe(initialAnt.y);
+    });
   });
 
-  test('Ant must move left when play button clicked', async () => {
-    const wrapper = mount(<App />);
-    const initialAnt: Ant = wrapper.state().ant;
-    await wrapper.find(AvPlayArrow).simulate('click');
-    const ant: Ant = wrapper.state().ant;
-    expect(ant.x).toBe(initialAnt.x + 1);
-    expect(ant.y).toBe(initialAnt.y);
+  describe('[App]Step 3.2: Second move', () => {
+    test('Ant must rotate 90° when play button clicked', async () => {
+      const wrapper = mount(<App />);
+      await wrapper.find(AvPlayArrow).simulate('click');
+      await wrapper.find(AvPlayArrow).simulate('click');
+      const ant: Ant = wrapper.state().ant;
+      expect(ant.rotation).toBe(180);
+    });
+
+    test('Cell is grey when play button clicked', async () => {
+      const wrapper = mount(<App />);
+      await wrapper.find(AvPlayArrow).simulate('click');
+      await wrapper.find(AvPlayArrow).simulate('click');
+      const cells: boolean[][] = wrapper.state().cells;
+      expect(cells[10][10]).toBe(true);
+      expect(cells[10][11]).toBe(true);
+      for (let line = 0; line < cells.length; line++) {
+        for (let cell = 0; cell < cells[line].length; cell++) {
+          if (line !== 10 && line !== 11 && cell !== 9) {
+            expect(wrapper.state().cells[line][cell]).toBe(false);
+          }
+        }
+      }
+    });
+
+    test('Ant must move left when play button clicked', async () => {
+      const wrapper = mount(<App />);
+      await wrapper.find(AvPlayArrow).simulate('click');
+      await wrapper.find(AvPlayArrow).simulate('click');
+      const ant: Ant = wrapper.state().ant;
+      expect(ant.x).toBe(11);
+      expect(ant.y).toBe(11);
+    });
   });
 });

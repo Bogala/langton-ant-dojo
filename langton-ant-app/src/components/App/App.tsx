@@ -16,21 +16,39 @@ export interface AppState {
   ant: Ant;
 }
 
+const moveByRotation = (rotation: number) => {
+  const value = { x: 0, y: 0 };
+  switch (rotation) {
+    case 90:
+      value.y++;
+      break;
+    default:
+      value.x++;
+      break;
+  }
+  return value;
+};
+
 class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props);
-    this.state = { 
-      cells: new Array<Array<boolean>>(21).fill(new Array<boolean>(21).fill(false)), 
-      ant: new Ant() 
+    this.state = {
+      cells: new Array<Array<boolean>>(21).fill(new Array<boolean>(21).fill(false)),
+      ant: new Ant()
     } as AppState;
   }
 
   onClick = () => {
-    const {cells, ant} = this.state;
+    const { cells, ant } = this.state;
     const line = _.clone(cells[ant.y]);
     line[ant.x] = !line[ant.x];
     cells[ant.y] = line;
-    this.setState({ant: {...this.state.ant, rotation: ant.rotation + 90, x: ant.x + 1}, cells: [...cells]});
+    const movement = moveByRotation(ant.rotation);
+    movement.x += ant.x;
+    movement.y += ant.y;
+    this.setState(
+      { ant: { ...this.state.ant, rotation: ant.rotation + 90, x: movement.x, y: movement.y }, cells: [...cells] }
+    );
   }
 
   render() {
