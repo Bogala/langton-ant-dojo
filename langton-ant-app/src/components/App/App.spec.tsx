@@ -26,8 +26,8 @@ const initAndPlay = async (playTimes: number = 1) => {
   for (let times = 0; times < playTimes; times++) {
     await wrapper.find(AvPlayArrow).simulate('click');
   }
-  const ant: Ant = wrapper.state().ant;
-  const cells: boolean[][] = wrapper.state().cells;
+  const ant: Ant = wrapper.find(Grid).props().ant;
+  const cells: boolean[][] = wrapper.find(Grid).props().cells;
   return {
     wrapper,
     ant,
@@ -76,16 +76,16 @@ describe('[App]Step 3: first rules and component state', () => {
     expect(wrapper.find(Grid).props().cells).toBe(wrapper.state().cells);
   });
 
-  test('Cells must be initiated with 21x21xfalse', () => {
-    const wrapper = shallow(<App />);
-    const cells = new Array<Array<boolean>>(21).fill(new Array<boolean>(21).fill(false));
-    expect(wrapper.state().cells).toEqual(cells);
-  });
-
   test('Ant must be in state', () => {
     const wrapper = mount(<App />);
     expect(wrapper.find(Grid).props().ant).toBeDefined();
     expect(wrapper.find(Grid).props().ant).toBe(wrapper.state().ant);
+  });
+
+  test('Cells must be initiated with 21x21xfalse', () => {
+    const wrapper = shallow(<App />);
+    const cells = new Array<Array<boolean>>(21).fill(new Array<boolean>(21).fill(false));
+    expect(wrapper.find(Grid).props().cells).toEqual(cells);
   });
 
   describe('[App]Step 3.1: First move', () => {
@@ -101,7 +101,7 @@ describe('[App]Step 3: first rules and component state', () => {
       for (let line = 0; line < cells.length; line++) {
         for (let cell = 0; cell < cells[line].length; cell++) {
           if (line !== ant.y && cell !== ant.x - 1) {
-            expect(wrapper.state().cells[line][cell]).toBe(false);
+            expect(wrapper.find(Grid).props().cells[line][cell]).toBe(false);
           }
         }
       }
@@ -127,7 +127,7 @@ describe('[App]Step 3: first rules and component state', () => {
       for (let line = 0; line < cells.length; line++) {
         for (let cell = 0; cell < cells[line].length; cell++) {
           if (line !== 10 && cell !== 11 && cell !== 10) {
-            expect(wrapper.state().cells[line][cell]).toBe(false);
+            expect(wrapper.find(Grid).props().cells[line][cell]).toBe(false);
           }
         }
       }
@@ -154,7 +154,7 @@ describe('[App]Step 3: first rules and component state', () => {
       for (let line = 0; line < cells.length; line++) {
         for (let cell = 0; cell < cells[line].length; cell++) {
           if (line !== 10 && cell !== 11 && cell !== 10) {
-            expect(wrapper.state().cells[line][cell]).toBe(false);
+            expect(wrapper.find(Grid).props().cells[line][cell]).toBe(false);
           }
         }
       }
@@ -182,7 +182,7 @@ describe('[App]Step 3: first rules and component state', () => {
       for (let line = 0; line < cells.length; line++) {
         for (let cell = 0; cell < cells[line].length; cell++) {
           if (line !== 10 && line !== 11 && cell !== 10 && cell !== 11) {
-            expect(wrapper.state().cells[line][cell]).toBe(false);
+            expect(wrapper.find(Grid).props().cells[line][cell]).toBe(false);
           }
         }
       }
