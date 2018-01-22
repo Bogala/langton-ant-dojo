@@ -26,7 +26,7 @@ const initAndPlay = async (playTimes: number = 1) => {
   for (let times = 0; times < playTimes; times++) {
     await wrapper.find(AvPlayArrow).simulate('click');
   }
-  const ant: Ant = wrapper.find(Grid).props().ant;
+  const ant: Ant | undefined = wrapper.find(Grid).props().ant;
   const cells: boolean[][] = wrapper.find(Grid).props().cells;
   return {
     wrapper,
