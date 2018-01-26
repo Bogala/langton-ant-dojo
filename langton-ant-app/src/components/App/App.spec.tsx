@@ -21,6 +21,11 @@ interface TestContext {
   cells: boolean[][];
 }
 
+interface GridCoordinates {
+  x: number;
+  y: number;
+}
+
 const initAndPlay = async (playTimes: number = 1) => {
   const wrapper = mount(<App />);
   for (let times = 0; times < playTimes; times++) {
@@ -33,6 +38,16 @@ const initAndPlay = async (playTimes: number = 1) => {
     ant,
     cells
   } as TestContext;
+};
+
+const expectGreyCells = (context: TestContext, ...greyCells: Array<GridCoordinates>) => {
+  for (let line = 0; line < context.cells.length; line++) {
+    for (let cell = 0; cell < context.cells[line].length; cell++) {
+      const val = greyCells.some(value => value.x === cell && value.y === line);
+      expect(context.wrapper.find(Grid).props().cells[line][cell])
+        .toBe(val);
+    }
+  }
 };
 
 describe('[App]Step 2 : a grid and an ant', () => {
@@ -96,15 +111,7 @@ describe('[App]Step 3: first rules and component state', () => {
     });
 
     test('Cell is grey when play button clicked', async () => {
-      const { wrapper, ant, cells } = await initAndPlay();
-      expect(cells[ant.y][ant.x - 1]).toBe(true);
-      for (let line = 0; line < cells.length; line++) {
-        for (let cell = 0; cell < cells[line].length; cell++) {
-          if (line !== ant.y && cell !== ant.x - 1) {
-            expect(wrapper.find(Grid).props().cells[line][cell]).toBe(false);
-          }
-        }
-      }
+      expectGreyCells(await initAndPlay(), { x: 10, y: 10 });
     });
 
     test('Ant must move left when play button clicked', async () => {
@@ -121,16 +128,7 @@ describe('[App]Step 3: first rules and component state', () => {
     });
 
     test('Cell is grey when play button clicked', async () => {
-      const { wrapper, cells } = await initAndPlay(2);
-      expect(cells[10][10]).toBe(true);
-      expect(cells[10][11]).toBe(true);
-      for (let line = 0; line < cells.length; line++) {
-        for (let cell = 0; cell < cells[line].length; cell++) {
-          if (line !== 10 && cell !== 11 && cell !== 10) {
-            expect(wrapper.find(Grid).props().cells[line][cell]).toBe(false);
-          }
-        }
-      }
+      expectGreyCells(await initAndPlay(2), { x: 10, y: 10 }, { x: 11, y: 10 });
     });
 
     test('Ant must move left when play button clicked', async () => {
@@ -147,17 +145,7 @@ describe('[App]Step 3: first rules and component state', () => {
     });
 
     test('Cell is grey when play button clicked', async () => {
-      const { wrapper, cells } = await initAndPlay(3);
-      expect(cells[10][10]).toBe(true);
-      expect(cells[10][11]).toBe(true);
-      expect(cells[11][11]).toBe(true);
-      for (let line = 0; line < cells.length; line++) {
-        for (let cell = 0; cell < cells[line].length; cell++) {
-          if (line !== 10 && cell !== 11 && cell !== 10) {
-            expect(wrapper.find(Grid).props().cells[line][cell]).toBe(false);
-          }
-        }
-      }
+      expectGreyCells(await initAndPlay(3), { x: 10, y: 10 }, { x: 11, y: 10 }, { x: 11, y: 11 });
     });
 
     test('Ant must move left when play button clicked', async () => {
@@ -174,18 +162,7 @@ describe('[App]Step 3: first rules and component state', () => {
     });
 
     test('Cell is grey when play button clicked', async () => {
-      const { wrapper, cells } = await initAndPlay(4);
-      expect(cells[10][10]).toBe(true);
-      expect(cells[10][11]).toBe(true);
-      expect(cells[11][11]).toBe(true);
-      expect(cells[11][10]).toBe(true);
-      for (let line = 0; line < cells.length; line++) {
-        for (let cell = 0; cell < cells[line].length; cell++) {
-          if (line !== 10 && line !== 11 && cell !== 10 && cell !== 11) {
-            expect(wrapper.find(Grid).props().cells[line][cell]).toBe(false);
-          }
-        }
-      }
+      expectGreyCells(await initAndPlay(4), { x: 10, y: 10 }, { x: 11, y: 10 }, { x: 11, y: 11 }, { x: 10, y: 11 });
     });
 
     test('Ant must move left when play button clicked', async () => {
@@ -202,11 +179,11 @@ describe('[App]Step 3: first rules and component state', () => {
     });
 
     test('Cell is grey when play button clicked', async () => {
-      const { cells } = await initAndPlay(5);
-      expect(cells[10][10]).toBe(false);
-      expect(cells[10][11]).toBe(true);
-      expect(cells[11][11]).toBe(true);
-      expect(cells[11][10]).toBe(true);
+      expectGreyCells(
+        await initAndPlay(5),
+        { x: 11, y: 10 },
+        { x: 11, y: 11 },
+        { x: 10, y: 11 });
     });
 
     test('Ant must move left when play button clicked', async () => {
@@ -223,16 +200,14 @@ describe('[App]Step 3: first rules and component state', () => {
     });
 
     test('Cell is grey when play button clicked', async () => {
-      const { cells } = await initAndPlay(10);
-      expect(cells[9][9]).toBe(true);
-      expect(cells[9][10]).toBe(true);
-      expect(cells[9][11]).toBe(false);
-      expect(cells[10][9]).toBe(false);
-      expect(cells[10][10]).toBe(true);
-      expect(cells[10][11]).toBe(true);
-      expect(cells[11][9]).toBe(false);
-      expect(cells[11][10]).toBe(true);
-      expect(cells[11][11]).toBe(true);
+      expectGreyCells(
+        await initAndPlay(10),
+        { x: 10, y: 10 },
+        { x: 11, y: 10 },
+        { x: 11, y: 11 },
+        { x: 10, y: 11 },
+        { x: 9, y: 9 },
+        { x: 10, y: 9 });
     });
 
     test('Ant must move left when play button clicked', async () => {
