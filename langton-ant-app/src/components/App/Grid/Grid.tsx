@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Ant } from './index';
 
 export interface GridBindingProps {
     cells: boolean[][];
@@ -6,18 +7,6 @@ export interface GridBindingProps {
 }
 export interface GridEventProps { }
 export interface GridProps extends GridBindingProps, GridEventProps { }
-
-export class Ant {
-    public x: number;
-    public y: number;
-    public rotation: number;
-
-    constructor(x: number = 10, y: number = 10, rotation: number = 0) {
-        this.x = x;
-        this.y = y;
-        this.rotation = rotation;
-    }
-}
 
 interface LineProps {
     line: boolean[];

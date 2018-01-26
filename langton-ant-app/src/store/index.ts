@@ -10,4 +10,4 @@ export const configureStore = () => (
     )
 );
 
-export {MainState} from './reducer';
+export {MainState, Ant} from './reducer';
