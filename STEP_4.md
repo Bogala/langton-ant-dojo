@@ -359,7 +359,7 @@ const newRotation = (rotation: number, right: boolean) => {
   return result;
 };
 
-const moveByRotation = (rotation: number, right: boolean) => {
+const newRotation = (rotation: number, right: boolean) => {
   const value = { x: 0, y: 0 };
   switch (rotation) {
     case 90:
@@ -383,12 +383,16 @@ const moveByRotation = (rotation: number, right: boolean) => {
 };
 ```
 
+`newRotation` and `newRotation` are copied from App.tsx and `play`function is an adapted copy from `onClick`.
+
 Don't forget the movement of Ant interface by remove definition on Grid.tsx.
 If you update `src/components/App/Grid/index.ts` like this
 ``` jsx
 export {Ant} from '../../../store/reducer';
 ```
 You will avoid side-effects.
+
+if you want to refactor, you can move functions to an `actions.ts` file.
 
 create tests for redux-react mapping
 ``` jsx
