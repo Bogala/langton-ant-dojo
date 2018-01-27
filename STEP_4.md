@@ -394,10 +394,14 @@ You will avoid side-effects.
 
 if you want to refactor, you can move functions to an `actions.ts` file.
 
-create tests for redux-react mapping
+To use the reducer in our application, we have to map `PLAY` event to App's `onClick` and map `grid` and `ant` to the grid.
+So, we don't need to have grid and ant definition anymore on App.tsx. Now, this is the Redux responsability.
+
+Let's begin with App.tsx. We want to purge state and map `onClick` to the redux dispatcher.
 ``` jsx
 //Work in progress
 ```
+If you want to map a event to dispatcher, you have to add this event to props.
 
 # Reminders
 ![TDD Cycles](https://upload.wikimedia.org/wikipedia/commons/0/0b/TDD_Global_Lifecycle.png)
