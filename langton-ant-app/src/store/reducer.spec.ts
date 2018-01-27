@@ -1,6 +1,7 @@
 import { MainState, Ant, default as  reducer } from './reducer';
 import { Action } from 'redux';
 import * as _ from 'lodash';
+import { PLAY } from './actions';
 
 interface GridCoordinates {
   x: number;
@@ -11,7 +12,7 @@ const initAndPlay = (playTimes: number = 1): MainState => {
   const initialState = _.cloneDeep(reducer(undefined, { type: null} as Action));
   let finalState = initialState;
   for (let times = 0; times < playTimes; times++) {
-    finalState = reducer(finalState, { type: 'PLAY'} as Action);
+    finalState = reducer(finalState, { type: PLAY} as Action);
   }
   return finalState;
 };
