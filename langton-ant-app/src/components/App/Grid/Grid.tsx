@@ -16,11 +16,11 @@ interface LineProps {
 
 interface CellProps {
     cellValue: boolean;
-    ant?: Ant; 
+    ant?: Ant;
 }
 
 const Line = ({ line, index, ant }: LineProps) => {
-    const {x, y} = ant || new Ant(-1, -1);
+    const { x, y } = ant || new Ant(-1, -1);
     return (
         <tr>
             {

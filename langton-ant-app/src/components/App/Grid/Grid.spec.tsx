@@ -5,7 +5,8 @@ import * as Adapter from 'enzyme-adapter-react-16';
 import * as React from 'react';
 
 import { configure, mount } from 'enzyme';
-import Grid, { Ant } from './';
+import { Ant } from './';
+import Grid from './Grid';
 
 const initiateCells = (width: number, height: number) => {
   return new Array<Array<boolean>>(height).fill(new Array<boolean>(width).fill(false)); 

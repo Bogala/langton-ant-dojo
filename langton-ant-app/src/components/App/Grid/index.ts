@@ -1,4 +1,4 @@
-import Grid from './Grid';
+import Grid from './Grid.container';
 import './Grid.scss';
 
 export {Ant} from '../../../store/reducer';
