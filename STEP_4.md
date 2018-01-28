@@ -359,7 +359,7 @@ const newRotation = (rotation: number, right: boolean) => {
   return result;
 };
 
-const moveByRotation = (rotation: number, right: boolean) => {
+const newRotation = (rotation: number, right: boolean) => {
   const value = { x: 0, y: 0 };
   switch (rotation) {
     case 90:
@@ -383,6 +383,8 @@ const moveByRotation = (rotation: number, right: boolean) => {
 };
 ```
 
+`newRotation` and `newRotation` are copied from App.tsx and `play`function is an adapted copy from `onClick`.
+
 Don't forget the movement of Ant interface by remove definition on Grid.tsx.
 If you update `src/components/App/Grid/index.ts` like this
 ``` jsx
@@ -390,10 +392,128 @@ export {Ant} from '../../../store/reducer';
 ```
 You will avoid side-effects.
 
-create tests for redux-react mapping
+if you want to refactor, you can move functions to an `actions.ts` file.
+
+To use the reducer in our application, we have to map `PLAY` event to App's `onClick` and map `grid` and `ant` to the grid.
+So, we don't need to have grid and ant definition anymore on App.tsx. Now, this is the Redux responsability.
+
+Let's begin with App.tsx. We want to purge state and map `onClick` to the redux dispatcher.
 ``` jsx
-//Work in progress
+export interface AppEventProps {
+  onClick?: () => void;
+ }
 ```
+If you want to map a event to dispatcher, you have to add this event to props.
+
+We want that the play button launch PLAY action in the reducer
+__App.container.spec.tsx__
+``` jsx
+const mockStore = configureStore();
+let container: ShallowWrapper;
+const store = mockStore({
+    grid: new Array<Array<boolean>>(21).fill(new Array<boolean>(21))
+        .map(() => new Array<boolean>(21).fill(false)),
+    ant: new Ant()
+});
+
+describe('App container', () => {
+    test('renders without crashing', () => {
+        container = shallow(<App />, { context: { store } });
+        expect(container.length).toEqual(1);
+    });
+
+    test('map Dispatch to onClic prop', async () => {
+        store.dispatch = jest.fn();
+        const wrapper = mount(<App />, { context: { store } });
+        await wrapper.find(AvPlayArrow).simulate('click');
+        expect(store.dispatch).toBeCalledWith({ type: PLAY} as Action);
+    });
+
+
+});
+```
+
+With this test, we can implement `App.container.tsx`
+``` jsx
+const mapDispatchToProps: MapDispatchToProps<AppEventProps, AppProps> = (dispatch, ownProps) => ({
+    onClick: () => {
+        dispatch({ type: PLAY} as Action);
+    }
+});
+```
+
+Now, we have to connect the Grid too
+__Grid.container.spec.tsx__
+``` jsx
+import 'core-js';
+import 'jest-enzyme';
+
+import * as Adapter from 'enzyme-adapter-react-16';
+import * as React from 'react';
+
+import { configure, shallow, ShallowWrapper } from 'enzyme';
+
+import configureStore from 'redux-mock-store';
+
+import Grid from './';
+import { Ant } from './';
+
+// tslint:disable-next-line:no-any
+configure({ adapter: new Adapter() });
+
+const mockStore = configureStore();
+let container: ShallowWrapper;
+const store = mockStore({
+    grid: new Array<Array<boolean>>(21).fill(new Array<boolean>(21))
+        .map(() => new Array<boolean>(21).fill(false)),
+    ant: new Ant()
+});
+
+describe('App container', () => {
+    test('renders without crashing', () => {
+        container = shallow(<Grid />, { context: { store } });
+        expect(container.length).toEqual(1);
+    });
+
+    test('Grid dispatched from redux to props', async () => {
+        container = shallow(<Grid />, { context: { store } });
+        expect(container.prop('cells')).toEqual(new Array<Array<boolean>>(21).fill(new Array<boolean>(21))
+        .map(() => new Array<boolean>(21).fill(false)));
+    });
+
+    test('Ant dispatched from redux to props', async () => {
+        container = shallow(<Grid />, { context: { store } });
+        expect(container.prop('ant')).toEqual(new Ant());
+    });
+});
+```
+__Grid.container.tsx__
+``` jsx
+import { MapStateToProps, MapDispatchToProps, connect } from 'react-redux';
+import { MainState } from '../../../store/';
+import Grid, { GridBindingProps, GridEventProps, GridProps } from './Grid';
+
+const mapStateToProps: MapStateToProps<GridBindingProps, GridProps, MainState> = (state, props) => ({
+    ant: state.ant,
+    cells: state.grid
+});
+const mapDispatchToProps: MapDispatchToProps<GridEventProps, GridProps> = (dispatch, ownProps) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Grid);
+```
+__Grid/index.ts__
+``` jsx
+import Grid from './Grid.container';
+import './Grid.scss';
+
+export {Ant} from '../../../store/reducer';
+
+export default Grid;
+```
+> If your project does not work, please download [_Solution zip file_](https://github.com/Bogala/langton-ant-dojo/archive/step4-redux.zip)
+
+Now, we can make tests and implement our new functionnal needs.
+> When you'll finish, you can go to the [next step : Asynchronous logic with Redux](./STEP_5.md)
 
 # Reminders
 ![TDD Cycles](https://upload.wikimedia.org/wikipedia/commons/0/0b/TDD_Global_Lifecycle.png)
