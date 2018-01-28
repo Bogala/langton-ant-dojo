@@ -407,7 +407,7 @@ If you want to map a event to dispatcher, you have to add this event to props.
 
 We want that the play button launch PLAY action in the reducer
 __App.container.spec.tsx__
-``` tsx
+``` jsx
 const mockStore = configureStore();
 let container: ShallowWrapper;
 const store = mockStore({
@@ -434,7 +434,7 @@ describe('App container', () => {
 ```
 
 With this test, we can implement `App.container.tsx`
-``` tsx
+``` jsx
 const mapDispatchToProps: MapDispatchToProps<AppEventProps, AppProps> = (dispatch, ownProps) => ({
     onClick: () => {
         dispatch({ type: PLAY} as Action);
@@ -444,7 +444,7 @@ const mapDispatchToProps: MapDispatchToProps<AppEventProps, AppProps> = (dispatc
 
 Now, we have to connect the Grid too
 __Grid.container.spec.tsx__
-```tsx
+``` jsx
 import 'core-js';
 import 'jest-enzyme';
 
@@ -488,7 +488,7 @@ describe('App container', () => {
 });
 ```
 __Grid.container.tsx__
-```tsx
+``` jsx
 import { MapStateToProps, MapDispatchToProps, connect } from 'react-redux';
 import { MainState } from '../../../store/';
 import Grid, { GridBindingProps, GridEventProps, GridProps } from './Grid';
@@ -502,7 +502,7 @@ const mapDispatchToProps: MapDispatchToProps<GridEventProps, GridProps> = (dispa
 export default connect(mapStateToProps, mapDispatchToProps)(Grid);
 ```
 __Grid/index.ts__
-```tsx
+``` jsx
 import Grid from './Grid.container';
 import './Grid.scss';
 
