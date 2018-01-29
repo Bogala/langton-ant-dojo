@@ -1,31 +1,29 @@
 # From Component State to Redux
 
 ## New functional need
-We have 2 milestones for our ant's moves : 700 moves and 2000+ moves
-(No spoil here, you'll see it in time)
+We have 2 milestones for our ant : 700 moves and 2000+ moves
+(No spoilers here, you'll see it in time)
 
-But, if we want to move the ant up to 700 or 2000 times, we doesn't want to click on play button each move.
-To prevent that, we will upgrade the play button :
-1. Play button must launch moves one by one and show the grid each time
-1. New pause button to stop process and show last move
-1. New label in the right of AppBar to whow the number of moves already maked
+But, if we want to move the ant up to 700 or 2000 times, we don't want to click on the play button for each move.
+Therefore, we will upgrade our button with three steps:
+1. The play button must iterate moves one by one and display the grid each time
+1. A new pause button stops the iteration and shows the last move
+1. A new label in the right of AppBar shows the number of moves already done
 
-## Refactor
-Firstly, our App component is too complex and we have to separate graphic component from functional behavior.
-To make this, we have to migrate our local state to a state manager : Redux.
+## Refactoring
+Firstly, our App component is too complex, and we have to separate the graphic component from the functional behavior.
+To split those, we have to migrate our local state to a state manager : Redux.
 
 ### What is Redux ?
-Redux is a predictable state container for JavaScript apps.
-
-It helps you write applications that behave consistently, run in different environments (client, server, and native), and are easy to test.
+Redux is a predictable state container for JavaScript apps that helps you write applications that behave consistently, run in different environments (client, server, and native), and are easy to test.
 
 To resume, Redux is :
 * A library for managing states with reducers
 * The better way of communication between components
-* First step towards functional programming
+* The first step towards functional programming
 
 ### What is a Reducer ?
-A simple function that take state and an action, and returns a new state.
+A simple function that takes a state and an action, and returns a new state.
 
 Reducers specify how the application's state changes in response to actions sent to the store. Remember that actions only describe the fact that something happened, but don't describe how the application's state changes.
 
@@ -33,8 +31,10 @@ Reducers specify how the application's state changes in response to actions sent
 The container is the connector between React component and reducers (redux state).
 
 ### Migration by the tests
-Move refs from App.state to App[Grid].props on `App.spec.tsx`
-Example, from :
+Move refs from `App.state` to `App[Grid].props` on `App.spec.tsx`.
+For example
+
+Before:
 ``` jsx
 const initAndPlay = async (playTimes: number = 1) => {
   const wrapper = mount(<App />);
@@ -51,7 +51,7 @@ const initAndPlay = async (playTimes: number = 1) => {
 };
 ```
 
-to :
+After:
 ``` jsx
 const initAndPlay = async (playTimes: number = 1) => {
   const wrapper = mount(<App />);
@@ -67,9 +67,9 @@ const initAndPlay = async (playTimes: number = 1) => {
   } as TestContext;
 };
 ```
-> So, you can make a search for "wrapper.state()" and replace to "wrapper.find(Grid).props()"
+> So, you can search for "wrapper.state()" and replace it with "wrapper.find(Grid).props()"
 
-create and implement tests in redux elements
+Create and implement tests in redux elements:
 ``` jsx
 import { MainState, Ant, default as  reducer } from './reducer';
 import { Action } from 'redux';
@@ -110,7 +110,7 @@ describe('reducer', () => {
   });
 });
 ```
-move steps tests from App to reducer
+Move step tests from App to reducer:
 ``` jsx
 import { MainState, Ant, default as  reducer } from './reducer';
 import { Action } from 'redux';
@@ -293,7 +293,7 @@ describe('reducer', () => {
 });
 ```
 
-Now, implement tests with App elements
+Now, implement tests with App elements:
 ``` jsx
 import { Action } from 'redux';
 import * as _ from 'lodash';
@@ -383,29 +383,30 @@ const newRotation = (rotation: number, right: boolean) => {
 };
 ```
 
-`newRotation` and `newRotation` are copied from App.tsx and `play`function is an adapted copy from `onClick`.
+`newRotation` and `newRotation` are copied from App.tsx and `play` function is an modifed version of `onClick`.
 
-Don't forget the movement of Ant interface by remove definition on Grid.tsx.
-If you update `src/components/App/Grid/index.ts` like this
+Don't forget the movement of the Ant interface by removing the definition in Grid.tsx.
+If you update `src/components/App/Grid/index.ts` like this:
 ``` jsx
 export {Ant} from '../../../store/reducer';
 ```
 You will avoid side-effects.
 
-if you want to refactor, you can move functions to an `actions.ts` file.
+If you want to refactor, you can move functions to an `actions.ts` file.
 
-To use the reducer in our application, we have to map `PLAY` event to App's `onClick` and map `grid` and `ant` to the grid.
-So, we don't need to have grid and ant definition anymore on App.tsx. Now, this is the Redux responsability.
+To use the reducer in our application, we have to map the `PLAY` event to our App's `onClick`, as well as map `grid` and `ant` to the grid.
+So, we don't need to have the grid and ant definitions anymore in `App.tsx`. Now, this is Redux' responsability.
 
-Let's begin with App.tsx. We want to purge state and map `onClick` to the redux dispatcher.
+Let's begin with `App.tsx`. We want to purge the state and map `onClick` to the redux dispatcher.
 ``` jsx
 export interface AppEventProps {
   onClick?: () => void;
  }
 ```
-If you want to map a event to dispatcher, you have to add this event to props.
+If you want to map an event to a dispatcher, you have to add this event to the props.
 
-We want that the play button launch PLAY action in the reducer
+We want the play button to launch the `PLAY` action in the reducer:
+
 __App.container.spec.tsx__
 ``` jsx
 const mockStore = configureStore();
@@ -433,7 +434,7 @@ describe('App container', () => {
 });
 ```
 
-With this test, we can implement `App.container.tsx`
+With this test, we can implement `App.container.tsx`:
 ``` jsx
 const mapDispatchToProps: MapDispatchToProps<AppEventProps, AppProps> = (dispatch, ownProps) => ({
     onClick: () => {
@@ -442,7 +443,8 @@ const mapDispatchToProps: MapDispatchToProps<AppEventProps, AppProps> = (dispatc
 });
 ```
 
-Now, we have to connect the Grid too
+Now, we have to connect the Grid as well:
+
 __Grid.container.spec.tsx__
 ``` jsx
 import 'core-js';
@@ -510,10 +512,10 @@ export {Ant} from '../../../store/reducer';
 
 export default Grid;
 ```
-> If your project does not work, please download [_Solution zip file_](https://github.com/Bogala/langton-ant-dojo/archive/step4-redux.zip)
+> If your project does not work, you can download [_the solution zip file_](https://github.com/Bogala/langton-ant-dojo/archive/step4-redux.zip)
 
-Now, we can make tests and implement our new functionnal needs.
-> When you'll finish, you can go to the [next step : Asynchronous logic with Redux](./STEP_5.md)
+Now, we can make tests and implement our new functionalities.
+> When you're done, you can go to the [next step : Asynchronous logic with Redux](./STEP_5.md)
 
 # Reminders
 ![TDD Cycles](https://upload.wikimedia.org/wikipedia/commons/0/0b/TDD_Global_Lifecycle.png)
@@ -524,13 +526,13 @@ Now, we can make tests and implement our new functionnal needs.
 1. Run all tests and verify all are green
 1. Refactor
 
-Before each test, we launch a five minutes timer.
+Before each test, launch a five minutes timer.
 * If the code compiles and the tests are green, commit!
 * Otherwise, revert!
 
-All __your__ code must be covered by unit tests.
+All of __your__ code must be covered by unit tests.
 
-We'll avoid maximum `any` (implicit or not).
+We'll avoid `any` as much as possible (implicit or not).
 
 ## Exercice Solution
 [_Download Example_](https://github.com/Bogala/langton-ant-dojo/archive/step4.zip)
