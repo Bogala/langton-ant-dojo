@@ -1,6 +1,7 @@
 import { MapStateToProps, MapDispatchToProps, connect } from 'react-redux';
 import { MainState } from '../../../store/';
 import Grid, { GridBindingProps, GridEventProps, GridProps } from './Grid';
+import { compose } from 'recompose';
 
 const mapStateToProps: MapStateToProps<GridBindingProps, GridProps, MainState> = (state, props) => ({
     ant: state.ant,
@@ -8,4 +9,8 @@ const mapStateToProps: MapStateToProps<GridBindingProps, GridProps, MainState> =
 });
 const mapDispatchToProps: MapDispatchToProps<GridEventProps, GridProps> = (dispatch, ownProps) => ({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(Grid);
+const enhance = compose<GridProps, GridProps>(connect(mapStateToProps, mapDispatchToProps));
+
+const GridEnhanced = enhance(Grid);
+
+export default GridEnhanced;

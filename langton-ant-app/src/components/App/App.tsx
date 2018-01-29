@@ -3,6 +3,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { AppBar, IconButton, Card } from 'material-ui';
 import AvPlayArrow from 'material-ui/svg-icons/av/play-arrow';
 import Grid from './Grid';
+import { Route, Switch } from 'react-router-dom';
 
 export interface AppBindingProps {
   title?: string;
@@ -22,7 +23,9 @@ const App = ({ title, onClick }: AppProps) => (
       <div>
         <div className="stretch">
           <Card className="md-card">
-            <Grid />
+            <Switch>
+              <Route path="/" component={Grid} />
+            </Switch>
           </Card>
         </div>
       </div>
