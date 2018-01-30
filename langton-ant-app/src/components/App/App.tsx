@@ -4,6 +4,7 @@ import { AppBar, IconButton, Card } from 'material-ui';
 import AvPlayArrow from 'material-ui/svg-icons/av/play-arrow';
 import Grid from './Grid';
 import { Route, Switch } from 'react-router-dom';
+import NotFound from './NotFound';
 
 export interface AppBindingProps {
   title?: string;
@@ -24,7 +25,8 @@ const App = ({ title, onClick }: AppProps) => (
         <div className="stretch">
           <Card className="md-card">
             <Switch>
-              <Route path="/" component={Grid} />
+              <Route path="/" component={Grid} exact={true} />
+              <Route component={NotFound} />
             </Switch>
           </Card>
         </div>
