@@ -2,7 +2,8 @@ import { MainState } from './';
 
 export const PLAY = 'PLAY';
 
-export const play = ({ grid, ant }: MainState): MainState => {
+export const play = ({ grid, ant, count }: MainState): MainState => {
+    const cnt = count + 1;
     const movement = moveByRotation(ant.rotation, grid[ant.y][ant.x]);
     const rotation = newRotation(ant.rotation, grid[ant.y][ant.x]);
     grid[ant.y][ant.x] = !grid[ant.y][ant.x];
@@ -10,7 +11,8 @@ export const play = ({ grid, ant }: MainState): MainState => {
     movement.y += ant.y;
     return {
         ant: { ...ant, rotation: rotation, x: movement.x, y: movement.y },
-        grid: [...grid]
+        grid: [...grid],
+        count: cnt
     };
 };
 

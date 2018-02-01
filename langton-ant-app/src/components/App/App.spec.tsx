@@ -6,9 +6,9 @@ import * as React from 'react';
 
 import { configure, shallow } from 'enzyme';
 import { AppBar, IconButton } from 'material-ui';
-import AvPlayArrow from 'material-ui/svg-icons/av/play-arrow';
 
 import App from './App';
+import { AvPause, AvPlayArrow } from 'material-ui/svg-icons';
 
 // tslint:disable-next-line:no-any
 configure({ adapter: new Adapter() });
@@ -26,10 +26,11 @@ describe('[App]Step 2 : a grid and an ant', () => {
 
   test('AppBar must have a play buttone', () => {
     const click = () => { return; };
-    const wrapper = shallow(<App onClick={click} />);
+    const wrapper = shallow(<App onPlay={click} onPause={click} />);
     const { iconElementLeft } = wrapper.find(AppBar).props();
     expect(iconElementLeft)
-      .toEqual(<IconButton><AvPlayArrow onClick={click} /></IconButton>);
+      // tslint:disable-next-line:max-line-length
+      .toEqual(<><IconButton><AvPause onClick={click} /></IconButton> <IconButton><AvPlayArrow onClick={click} /></IconButton></>);
   });
 
   test('AppBar s title can be defined', () => {

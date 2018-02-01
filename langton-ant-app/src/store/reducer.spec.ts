@@ -36,6 +36,7 @@ describe('reducer', () => {
     class MockMainState implements MainState {
       grid: boolean[][];
       ant: Ant;
+      count: number;
     }
     const actual = reducer(new MockMainState(), { type: null} as Action);
     expect(actual instanceof MockMainState).toBeTruthy();
@@ -62,6 +63,11 @@ describe('reducer', () => {
   test('initial state must have an ant at 10:10:0°', () => {
     const actual = reducer(undefined, { type: null} as Action);
     expect(actual.ant).toEqual(new Ant());
+  });
+
+  test('8 movements should show number of mvts', () => {
+    const { count } = initAndPlay(8);
+    expect(count).toBe(8);
   });
 
   describe('[App]Step 3.1: First move', () => {
