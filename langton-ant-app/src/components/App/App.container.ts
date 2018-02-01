@@ -13,7 +13,7 @@ const mapStateToProps: MapStateToProps<AppBindingProps, AppProps, MainState> = (
 const mapDispatchToProps: MapDispatchToProps<AppEventProps, AppProps> = (dispatch, ownProps) => ({
     onPlay: () => {
         if (!handle) {
-            handle = setInterval(
+            handle = window.setInterval(
                 () => {
                     dispatch({ type: PLAY } as Action);
                 },
