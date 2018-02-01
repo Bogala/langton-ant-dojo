@@ -22,4 +22,4 @@ All of __your__ code must be covered by unit tests.
 We'll avoid `any` as much as possible (implicit or not).
 
 ## Exercice Solution
-[_Download Example_](https://github.com/Bogala/langton-ant-dojo/archive/step5.zip)
+[_Download Example_](https://github.com/Bogala/langton-ant-dojo/archive/step6.zip)
