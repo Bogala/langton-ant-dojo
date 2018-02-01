@@ -514,6 +514,86 @@ export default Grid;
 ```
 > If your project does not work, you can download [_the solution zip file_](https://github.com/Bogala/langton-ant-dojo/archive/step4-redux.zip)
 
+## Play with Routes ?
+If you want to play with routes, you can make a route validator : if we are at root (`/`), we can see the grid. Otherwise, we will have a 404 error.
+
+Before, we make a `NotFound` component under `App`
+__NotFound.spec.tsx__
+``` jsx
+import * as React from 'react';
+import * as renderer from 'react-test-renderer';
+import NotFound from './';
+
+describe('footer', () => {
+
+  it('Render match snapshot ', () => {
+    const component = renderer.create(<NotFound />).toJSON();
+    expect(component).toMatchSnapshot();
+  });
+});
+```
+
+__NotFound.tsx__
+```jsx
+import * as React from 'react';
+
+export default () => (
+    <div>
+        <h1>404 not found</h1>
+        <p>The page your are searching for is not here!</p>
+    </div>
+);
+```
+
+### How react router works
+React Router v4 is a pure React rewrite of the popular React package. Previous versions of React Router used configuration disguised as pseudo-components and would be difficult to understand. Now with v4, everything is now “just components”.
+Every component can manage its own routes. Let's make our simple example :
+
+Before all, explain to your application that you want to use routes with tag `BrowserRouter`
+__index.tsx__
+``` jsx
+  <Provider store={configureStore()}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Provider>,
+  document.getElementById('root') as HTMLElement
+);
+```
+
+And, in your `App` component, add an explanation about what we want :
+``` jsx
+const App = ({ title, onClick }: AppProps) => (
+  <MuiThemeProvider>
+    <div>
+      <AppBar
+        title={title || 'Langton Ant'}
+        iconElementLeft={<IconButton><AvPlayArrow onClick={onClick} /></IconButton>}
+      />
+      <div>
+        <div className="stretch">
+          <Card className="md-card">
+            <Switch>
+              <Route path="/" component={Grid} exact={true} />
+              <Route component={NotFound} />
+            </Switch>
+          </Card>
+        </div>
+      </div>
+    </div>
+  </MuiThemeProvider>
+);
+```
+* `Switch` indicate the route specifications definition
+* `Route` is used to define and specify how works one Route
+* `path` is the url suffix used to redirect to component. Here, we are in the root path (http://localhost:3000/) but, if we are in a component under path /foo and we define path with "/bar", the url of this component is http://localhost:3000/foo/bar.
+* `exact` define if the system read any path under the Route. If false, the path is considered as a begining. All url after `/` will be managed in defined component. If true, the `/` is the only one route used for this component.
+* The order is important is important and the list must finish with a `Route` element without path. It's used for all other paths.
+
+> If  you want, you can directly download [the code with router](https://github.com/Bogala/langton-ant-dojo/archive/step4-router.zip).
+
+So here, if we are on http://localhost:3000/ url, the grid will be shown. But, all other path show the Not Found component.
+
 Now, we can make tests and implement our new functionalities.
 > When you're done, you can go to the [next step : Asynchronous logic with Redux](./STEP_5.md)
 
