@@ -15,6 +15,8 @@ Firstly, our App component is too complex, and we have to separate the graphic c
 To split those, we have to migrate our local state to a state manager : Redux.
 
 ### What is Redux ?
+Redux was created by Dan Abramov around June 2015. It was inspired by Facebook’s Flux and functional programming language Elm. Redux got popular very quickly because of its simplicity, small size (only 2 KB) and great documentation.
+
 Redux is a predictable state container for JavaScript apps that helps you write applications that behave consistently, run in different environments (client, server, and native), and are easy to test.
 
 To resume, Redux is :
