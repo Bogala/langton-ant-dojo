@@ -359,7 +359,7 @@ const newRotation = (rotation: number, right: boolean) => {
   return result;
 };
 
-const newRotation = (rotation: number, right: boolean) => {
+const moveByRotation = (rotation: number, right: boolean) => {
   const value = { x: 0, y: 0 };
   switch (rotation) {
     case 90:
@@ -383,7 +383,7 @@ const newRotation = (rotation: number, right: boolean) => {
 };
 ```
 
-`newRotation` and `newRotation` are copied from App.tsx and `play` function is an modifed version of `onClick`.
+`newRotation` and `moveByRotation` are copied from App.tsx and `play` function is an modifed version of `onClick`.
 
 Don't forget the movement of the Ant interface by removing the definition in Grid.tsx.
 If you update `src/components/App/Grid/index.ts` like this:
