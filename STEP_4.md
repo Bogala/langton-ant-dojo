@@ -15,12 +15,31 @@ Firstly, our App component is too complex, and we have to separate the graphic c
 To split those, we have to migrate our local state to a state manager : Redux.
 
 ### What is Redux ?
+Redux was created by Dan Abramov around June 2015. It was inspired by Facebook’s Flux and functional programming language Elm. Redux got popular very quickly because of its simplicity, small size (only 2 KB) and great documentation.
+
 Redux is a predictable state container for JavaScript apps that helps you write applications that behave consistently, run in different environments (client, server, and native), and are easy to test.
+
+Redux simplify significtaly communication between components ([PPTX](./pptx/Components_and_Redux.pptx)) :
+<table>
+  <tr>
+    <th>Without Redux</th>
+    <th>With Redux</th>
+  </tr>
+  <tr>
+    <td><img src="./images/redux_without.png" /></td>
+    <td><img src="./images/redux_with.png" /></td>
+  </tr>
+</table>
 
 To resume, Redux is :
 * A library for managing states with reducers
 * The better way of communication between components
 * The first step towards functional programming
+
+### What is Flux and what is the difference with Redux?
+Flux is the application architecture that Facebook uses for building client-side web applications. It complements React's composable view components by utilizing a unidirectional data flow. It's more of a pattern rather than a formal framework.
+
+![Flux vs Redux](./images/flux-vs-redux.jpg)
 
 ### What is a Reducer ?
 A simple function that takes a state and an action, and returns a new state.
@@ -359,7 +378,7 @@ const newRotation = (rotation: number, right: boolean) => {
   return result;
 };
 
-const newRotation = (rotation: number, right: boolean) => {
+const moveByRotation = (rotation: number, right: boolean) => {
   const value = { x: 0, y: 0 };
   switch (rotation) {
     case 90:
@@ -383,7 +402,7 @@ const newRotation = (rotation: number, right: boolean) => {
 };
 ```
 
-`newRotation` and `newRotation` are copied from App.tsx and `play` function is an modifed version of `onClick`.
+`newRotation` and `moveByRotation` are copied from App.tsx and `play` function is an modifed version of `onClick`.
 
 Don't forget the movement of the Ant interface by removing the definition in Grid.tsx.
 If you update `src/components/App/Grid/index.ts` like this:
