@@ -24,6 +24,11 @@ To resume, Redux is :
 * The better way of communication between components
 * The first step towards functional programming
 
+### What is Flux and what is the difference with Redux?
+Flux is the application architecture that Facebook uses for building client-side web applications. It complements React's composable view components by utilizing a unidirectional data flow. It's more of a pattern rather than a formal framework.
+
+![Flux vs Redux](./images/flux-vs-redux.jpg)
+
 ### What is a Reducer ?
 A simple function that takes a state and an action, and returns a new state.
 
