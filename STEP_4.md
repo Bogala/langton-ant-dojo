@@ -19,7 +19,7 @@ Redux was created by Dan Abramov around June 2015. It was inspired by Facebookâ€
 
 Redux is a predictable state container for JavaScript apps that helps you write applications that behave consistently, run in different environments (client, server, and native), and are easy to test.
 
-Redux simplify significtaly communication between components :
+Redux simplify significtaly communication between components ([PPTX](./pptx/Components_and_Redux.pptx)) :
 <table>
   <tr>
     <th>Without Redux</th>
