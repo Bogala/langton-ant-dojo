@@ -1,26 +1,28 @@
+	
 {
     // Use IntelliSense to learn about possible attributes.
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        {
-            "name": "Debug Jest", // name to show in Debug config picker
-            "type": "node",
-            "request": "launch",
-            "address": "localhost",
-            // everything above here is standard node debug
-            // some people specify "port": 5858, but that didn't work; Code seems to pick the right one now
-            "sourceMaps": true, // if you are using Babel or TS, make this true
-            // you can add another arg to pattern-match limit the tests, just as when normally running jest
-            "runtimeArgs": [
-                "${workspaceRoot}/node_modules/.bin/react-ats-scripts",
-                "test", // https://facebook.github.io/jest/docs/en/cli.html#runinband - don't parallelize
-                "--env=jsdom" // https://facebook.github.io/jest/docs/en/cli.html#cache - just avoid caching issues
-            ],
-            "env": {
-                "NODE_ENV": "test" // make sure it matches your target; useful for babel config
-            }
-        }
+      {
+        "name": "Debug JEST Tests",
+        "type": "node",
+        "request": "launch",
+        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/react-ats-scripts",
+        "runtimeArgs": [
+            "--inspect-brk"
+        ],
+        "args": [
+          "test",
+          "--runInBand",
+          "--no-cache",
+          "--env=jsdom"
+        ],
+        "cwd": "${workspaceRoot}",
+        "protocol": "inspector",
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen"
+      }
     ]
-}
+  }
