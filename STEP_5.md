@@ -49,6 +49,15 @@ and returns a stream of new actions to dispatch.
 
 ## Refactor
 ### Add RxJS and Redux-observable middleware
+Before all, we have to install packages
+
+``` shell
+yarn add rxjs redux-observable
+```
+
+Types are included in each package. We don't have to add any `@types/rxjs` or `@types/redux-observable`
+
+
 
 ## New functional need
 Please try over 900 movements... Your ant needs a bigger grid.
