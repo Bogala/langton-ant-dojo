@@ -48,7 +48,32 @@ and returns a stream of new actions to dispatch.
 
 
 ## Refactor
-### Add RxJS and Redux-observable middleware
+### Change actions name
+To prepare next step, we have to change PLAY action :
+
+__actions.ts__
+
+``` typescript
+export const PLAY = 'PLAY';
+export const PLAYED = 'PLAYED';
+export const PAUSED = 'PAUSED';
+``` 
+
+Now, on reducer, PLAY is PLAYED. (PLAY will be used for loop)
+``` typescript
+export default (state: MainState = initialState, action: Action) => {
+  switch (action.type) {
+    case PLAYED: {
+      const finalState = play(state);
+      return { ...finalState };
+    }
+    default:
+      return state;
+  }
+};
+``` 
+
+### NPM packages
 Before all, we have to install packages
 
 ``` shell
@@ -57,7 +82,108 @@ yarn add rxjs redux-observable
 
 Types are included in each package. We don't have to add any `@types/rxjs` or `@types/redux-observable`
 
+### Epic by the test
+Make our first test
+__epic.spec.ts__
 
+``` typescript
+describe('Epic', () => {
+    test('Dispatch played when launched', (done) => {
+        const action$ = ActionsObservable.of({ type: PLAY });
+        const expectedOutputActions = { type: PLAYED };
+
+        epic(action$).subscribe(actionReceived => {
+            expect(actionReceived.type).toBe(expectedOutputActions.type);
+            done();
+        });
+    });
+});
+``` 
+
+That make an epic like this :
+``` typescript
+export default (action$: ActionsObservable<Action>) => 
+    action$.ofType(PLAY)
+        .switchMap(() =>
+            Observable.interval(50)
+            .takeUntil(action$.ofType(PAUSED))
+            .mapTo({ type: PLAYED })
+        );
+```
+
+### Add Middleware
+We have to change our store index.ts
+
+``` typescript
+import { createStore, applyMiddleware } from 'redux';
+import { createEpicMiddleware } from 'redux-observable';
+import reducer from './reducer';
+import { compose } from 'recompose';
+import epic from './epic';
+
+// tslint:disable-next-line:no-any
+const composeEnhancers =
+    // tslint:disable-next-line:no-any
+    (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const epicMiddleware = createEpicMiddleware(epic, {
+    dependencies: {  }
+});
+
+export const configureStore = () => (
+    createStore(
+        reducer,
+        composeEnhancers(applyMiddleware(epicMiddleware))
+    )
+);
+
+export {MainState, Ant} from './reducer';
+``` 
+Now, we use compose to enhance previous configuration with epicMiddleWare (redux-observable)
+
+### Update App container
+Our mapDispatchToProps don't need interval anymore. we will use dispatch to call redux an epic middleware :
+``` typescript
+const mapDispatchToProps: MapDispatchToProps<AppEventProps, AppProps> = (dispatch, ownProps) => ({
+    onPlay: () => {
+        dispatch({ type: PLAY } as Action);
+    },
+    onPause: () => {
+        dispatch({ type: PAUSED } as Action);
+    }
+});
+``` 
+
+But, with this, our tests not work, we make one dispatch more by button clicked :
+``` typescript
+    test('Pause button stop dispatchs', async () => {
+        // tslint:disable-next-line:no-any
+        (store.dispatch as any).mockClear();
+        
+        const wrapper = 
+            mount(<Provider store={store}><MemoryRouter initialEntries={['/']}><App /></MemoryRouter></Provider>);
+        await wrapper.find(AvPlayArrow).simulate('click');
+
+        jest.runOnlyPendingTimers();
+        expect(store.dispatch).toHaveBeenCalled();
+
+        await wrapper.find(AvPause).simulate('click');
+        jest.runOnlyPendingTimers();
+        expect(store.dispatch).toHaveBeenCalledTimes(2);
+    });
+
+    test('stop stopped should not make exception', async () => {
+        // tslint:disable-next-line:no-any
+        (store.dispatch as any).mockClear();
+        
+        const wrapper = 
+            mount(<Provider store={store}><MemoryRouter initialEntries={['/']}><App /></MemoryRouter></Provider>);
+        
+        await wrapper.find(AvPause).simulate('click');
+        jest.runOnlyPendingTimers();
+        expect(store.dispatch).toHaveBeenCalledTimes(1);
+    });
+``` 
 
 ## New functional need
 Please try over 900 movements... Your ant needs a bigger grid.
