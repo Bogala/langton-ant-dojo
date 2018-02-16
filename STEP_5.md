@@ -44,7 +44,7 @@ An Epic is the core primitive of redux-observable.
 
 It is a function that takes a stream of all actions dispatched 
 and returns a stream of new actions to dispatch.
-![](./images/redux-rxjs-epic.png)
+![](./images/redux-rxjs-epic2.png)
 
 
 ## Refactor
