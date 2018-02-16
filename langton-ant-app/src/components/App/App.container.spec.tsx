@@ -78,7 +78,7 @@ describe('App container', () => {
 
         await wrapper.find(AvPause).simulate('click');
         jest.runOnlyPendingTimers();
-        expect(store.dispatch).toHaveBeenCalledTimes(1);
+        expect(store.dispatch).toHaveBeenCalledTimes(2);
     });
 
     test('stop stopped should not make exception', async () => {
@@ -90,7 +90,7 @@ describe('App container', () => {
         
         await wrapper.find(AvPause).simulate('click');
         jest.runOnlyPendingTimers();
-        expect(store.dispatch).toHaveBeenCalledTimes(0);
+        expect(store.dispatch).toHaveBeenCalledTimes(1);
     });
 
     test('Title adapted from count', async () => {

@@ -1,6 +1,8 @@
 import { MainState } from './';
 
 export const PLAY = 'PLAY';
+export const PLAYED = 'PLAYED';
+export const PAUSED = 'PAUSED';
 
 export const play = ({ grid, ant, count }: MainState): MainState => {
     const cnt = count + 1;
