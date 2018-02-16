@@ -40,9 +40,15 @@ myObservable.subscribe(
 
 
 ## Redux and Epics
+An Epic is the core primitive of redux-observable.
+
+It is a function that takes a stream of all actions dispatched 
+and returns a stream of new actions to dispatch.
+![](./images/redux-rxjs-epic.png)
+
 
 ## Refactor
-### USe async
+### Add RxJS and Redux-observable middleware
 
 ## New functional need
 Please try over 900 movements... Your ant needs a bigger grid.
