@@ -87,20 +87,63 @@ Make our first test
 __epic.spec.ts__
 
 ``` typescript
-describe('Epic', () => {
-    test('Dispatch played when launched', (done) => {
-        const action$ = ActionsObservable.of({ type: PLAY });
-        const expectedOutputActions = { type: PLAYED };
+configure({ adapter: new Adapter() });
 
-        epic(action$).subscribe(actionReceived => {
-            expect(actionReceived.type).toBe(expectedOutputActions.type);
-            done();
-        });
+jest.useFakeTimers();
+
+const epicMiddleware = createEpicMiddleware(epic);
+const mockStore = configureStore([epicMiddleware]);
+
+let store: MockStore<{}>;
+
+describe('Epic', () => {
+    beforeEach(() => {
+        store = mockStore({});
+    });
+
+    afterEach(() => {
+        epicMiddleware.replaceEpic(epic);
+    });
+
+    test('Dispatch played when launched', () => {
+        store.dispatch({ type: PLAY });
+        jest.runOnlyPendingTimers();
+        expect(store.getActions()).toEqual([
+            { type: PLAY },
+            { type: PLAYED }
+        ]);
     });
 });
 ``` 
 
 That make an epic like this :
+``` typescript
+export default (action$: ActionsObservable<Action>) => 
+    action$.ofType(PLAY)
+        .switchMap(() =>
+            Observable.interval(50)
+            .mapTo({ type: PLAYED })
+        );
+```
+
+A second test
+
+``` typescript
+    test('Dispatch cancelled when paused', () => {
+        store.dispatch({ type: PLAY });
+        jest.runOnlyPendingTimers();
+        store.dispatch({ type: PAUSED });
+        jest.runOnlyPendingTimers();
+        expect(store.getActions()).toEqual([
+            { type: PLAY },
+            { type: PLAYED },
+            { type: PLAYED },
+            { type: PAUSED }
+        ]);
+    });
+```
+
+Our new epic :
 ``` typescript
 export default (action$: ActionsObservable<Action>) => 
     action$.ofType(PLAY)
