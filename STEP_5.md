@@ -227,10 +227,18 @@ But, with this, our tests not work, we make one dispatch more by button clicked 
         expect(store.dispatch).toHaveBeenCalledTimes(1);
     });
 ``` 
+> If you want to begin here, you can download [this sources](https://github.com/Bogala/langton-ant-dojo/archive/step5-refactored.zip)
 
 ## New functional need
 Please try over 900 movements... Your ant needs a bigger grid.
-So, now, we nedd to have a dynamic size for our grid.
+So, now, we need to have a dynamic size for our grid.
+
+If your Ant is on the border of the grid: 
+* add one line above
+* add one line below
+* add one column before
+* add one column after
+* update the Ant coordinates
 
 
 > When you're done, you can go to the [next step : Advanced Typescript](./STEP_6.md)
