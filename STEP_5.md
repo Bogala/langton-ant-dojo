@@ -1,5 +1,4 @@
 # Asynchronous logic with Redux
-> Work in progress
 
 Redux reducers handle state transitions, but they must be 
 handled synchronously.
