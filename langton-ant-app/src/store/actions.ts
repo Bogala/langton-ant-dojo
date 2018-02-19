@@ -3,6 +3,26 @@ import { MainState } from './';
 export const PLAY = 'PLAY';
 export const PLAYED = 'PLAYED';
 export const PAUSED = 'PAUSED';
+export const REDIM = 'REDIM';
+
+export const redim = ({ grid, ant, count }: MainState): MainState => {
+    const length = grid.length;
+    grid.unshift(new Array<boolean>(length).fill(false));
+    grid.push(new Array<boolean>(length).fill(false));
+    grid.forEach(item => {
+        item.unshift(false);
+        item.push(false);
+    });
+    if (ant) {
+        ant.x++;
+        ant.y++;
+    }
+    return {
+        ant: { ...ant },
+        grid: [...grid],
+        count
+    };
+};
 
 export const play = ({ grid, ant, count }: MainState): MainState => {
     const cnt = count + 1;

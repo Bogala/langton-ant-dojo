@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { play, PLAYED } from './actions';
+import { play, PLAYED, REDIM, redim } from './actions';
 
 export class Ant {
   public x: number;
@@ -34,6 +34,10 @@ export default (state: MainState = initialState, action: Action) => {
   switch (action.type) {
     case PLAYED: {
       const finalState = play(state);
+      return { ...finalState };
+    }
+    case REDIM: {
+      const finalState = redim(state);
       return { ...finalState };
     }
     default:

@@ -1,7 +1,7 @@
-import { MainState, Ant, default as  reducer } from './reducer';
+import { MainState, Ant, default as reducer } from './reducer';
 import { Action } from 'redux';
 import * as _ from 'lodash';
-import { PLAYED } from './actions';
+import { PLAYED, REDIM } from './actions';
 
 interface GridCoordinates {
   x: number;
@@ -9,12 +9,17 @@ interface GridCoordinates {
 }
 
 const initAndPlay = (playTimes: number = 1): MainState => {
-  const initialState = _.cloneDeep(reducer(undefined, { type: null} as Action));
+  const initialState = _.cloneDeep(reducer(undefined, { type: null } as Action));
   let finalState = initialState;
   for (let times = 0; times < playTimes; times++) {
-    finalState = reducer(finalState, { type: PLAYED} as Action);
+    finalState = reducer(finalState, { type: PLAYED } as Action);
   }
   return finalState;
+};
+
+const initAndRedim = (): MainState => {
+  const initialState = _.cloneDeep(reducer(undefined, { type: null } as Action));
+  return reducer(initialState, { type: REDIM } as Action);
 };
 
 const expectGreyCells = (context: MainState, ...greyCells: Array<GridCoordinates>) => {
@@ -28,7 +33,7 @@ const expectGreyCells = (context: MainState, ...greyCells: Array<GridCoordinates
 
 describe('reducer', () => {
   test('should initialise with MainState Interface', () => {
-    const actual = reducer(undefined, { type: null} as Action);
+    const actual = reducer(undefined, { type: null } as Action);
     expect(actual as MainState).toBeTruthy();
   });
 
@@ -38,17 +43,17 @@ describe('reducer', () => {
       ant: Ant;
       count: number;
     }
-    const actual = reducer(new MockMainState(), { type: null} as Action);
+    const actual = reducer(new MockMainState(), { type: null } as Action);
     expect(actual instanceof MockMainState).toBeTruthy();
   });
 
   test('initial state must have a grid definition', () => {
-    const actual = reducer(undefined, { type: null} as Action);
+    const actual = reducer(undefined, { type: null } as Action);
     expect(actual).toHaveProperty('grid');
   });
 
   test('initial state must have a 21x21xfalse grid', () => {
-    const actual = reducer(undefined, { type: null} as Action);
+    const actual = reducer(undefined, { type: null } as Action);
     expect(actual.grid)
       .toEqual(
         new Array<Array<boolean>>(21).fill(new Array<boolean>(21)).map(() => new Array<boolean>(21).fill(false))
@@ -56,12 +61,12 @@ describe('reducer', () => {
   });
 
   test('initial state must have an ant definition', () => {
-    const actual = reducer(undefined, { type: null} as Action);
+    const actual = reducer(undefined, { type: null } as Action);
     expect(actual).toHaveProperty('ant');
   });
 
   test('initial state must have an ant at 10:10:0°', () => {
-    const actual = reducer(undefined, { type: null} as Action);
+    const actual = reducer(undefined, { type: null } as Action);
     expect(actual.ant).toEqual(new Ant());
   });
 
@@ -181,6 +186,18 @@ describe('reducer', () => {
       const { ant } = initAndPlay(10);
       expect(ant.x).toBe(9);
       expect(ant.y).toBe(11);
+    });
+  });
+
+  describe('Step 5: redim change grid size and ant position', () => {
+    test('Redim change size', () => {
+      const { grid } = initAndRedim();
+      expect(grid).toHaveLength(23);
+    });
+    
+    test('Redim change ant position', () => {
+      const { ant } = initAndRedim();
+      expect(ant).toEqual({ x: 11, y: 11, rotation: 0 } as Ant);
     });
   });
 });
