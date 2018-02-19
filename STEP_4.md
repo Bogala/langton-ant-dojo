@@ -1,7 +1,7 @@
 # From Component State to Redux
 
 ## New functional need
-We have 2 milestones for our ant : 700 moves and 2000+ moves
+We have 2 milestones for our ant : 700 moves and 20000+ moves
 (No spoilers here, you'll see it in time)
 
 But, if we want to move the ant up to 700 or 2000 times, we don't want to click on the play button for each move.
