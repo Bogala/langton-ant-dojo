@@ -111,6 +111,9 @@ But, with that, you can not use function args or enhance existing.
 Property decorators are similar to method decorators. The only difference is they do not accept property descriptor as argument and do not return anything.
 
 ### Class decorator
+
+A class decorator is a function that accepts a constructor function and returns a contstructor function. Returning undefined is equivalent to returning the constructor function passed in as argument.
+
 Here, you can see the react-redux connect decorator
 
 ``` typescript 
