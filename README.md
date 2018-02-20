@@ -37,7 +37,7 @@ All __your__ code must be covered by unit tests. Our technology permit this : Re
 In this case, we'll use Typescript to verify coherence between objects. We'll avoid maximum `any` (implicit or not).
 
 ## Steps
-You can see all steps here :
+It is a six parts dojo, each part need previous (or previous solution) to be played :
 1. [Create React Project](./STEP_1.md)
 1. [A Grid and An Ant](./STEP_2.md)
 1. [First rules and Component State](./STEP_3.md)
