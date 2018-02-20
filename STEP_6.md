@@ -1,4 +1,4 @@
-# Advanced Typescript
+# Advanced Typescript & React forms
 
 In this last part, we'll learn some advanced typescript tools like Generics, Decorators or anbient declaration files. But also how to make forms in react.
 
