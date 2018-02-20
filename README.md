@@ -36,4 +36,13 @@ All __your__ code must be covered by unit tests. Our technology permit this : Re
 ### Types
 In this case, we'll use Typescript to verify coherence between objects. We'll avoid maximum `any` (implicit or not).
 
+## Steps
+You can see all steps here :
+1. [Create React Project](./STEP_1.md)
+1. [A Grid and An Ant](./STEP_2.md)
+1. [First rules and Component State](./STEP_3.md)
+1. [From Component State to Redux](./STEP_4.md)
+1. [Asynchronous logic with Redux](./STEP_5.md)
+1. [Advanced Typescript and React Forms](./STEP_6.md)
+
 > Now we can begin the dojo with the [first step : Create React App](./STEP_1.md)
