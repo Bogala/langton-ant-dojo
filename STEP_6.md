@@ -100,6 +100,15 @@ class Calculator {
 ``` 
 
 To update or replace method behavior, you have to use descriptor.value (and apply to execute).
+If you want to be simplier, you can make your decorator like this :
+
+``` typescript
+const log = (target: Object, key: string | symbol, descriptor: TypedPropertyDescriptor<Function>) => {
+    console.log("log decorator called");
+}
+``` 
+
+But, with that, you can not use function args or enhance existing.
 
 ### Class decorator
 Here, you can see the react-redux connect decorator
