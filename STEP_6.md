@@ -72,6 +72,8 @@ const isNumber = (arg: number | string) => {
 ### Decorator
 A Decorator is a special kind of declaration that can be attached to a class declaration, method, accessor, property, or parameter. Decorators use the form @expression, where expression must evaluate to a function that will be called at runtime with information about the decorated declaration.
 
+We have 5 types of decorators : factories, methods, classes, parameters and properties. 
+
 ### Method decorator
 Method decorator can enhance the function described just below declaration. It can be used to observe, modify or replace a function definition.
 
