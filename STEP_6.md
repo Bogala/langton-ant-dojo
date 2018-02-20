@@ -69,11 +69,71 @@ const isNumber = (arg: number | string) => {
 ``` 
 
 
-### Decorator factories
+### Decorator
+A Decorator is a special kind of declaration that can be attached to a class declaration, method, accessor, property, or parameter. Decorators use the form @expression, where expression must evaluate to a function that will be called at runtime with information about the decorated declaration.
 
-### Decorator composition and evaluation
+### Method decorator
+Method decorator can enhance the function described just below declaration. It can be used to observe, modify or replace a function definition.
+
+For example :
+
+``` typescript
+const log = (target: Object, key: string | symbol, descriptor: TypedPropertyDescriptor<Function>) => {
+    return {
+        value: function( ... args: Array<any>) {
+            console.log("Arguments: ", args.join(", "));
+            const result = descriptor.value.apply(target, args);
+            console.log("Result: ", result);
+            return result;
+        }
+    }
+}
+
+class Calculator {
+    @log
+    add(x: number, y: number) {
+        return x + y;
+    }
+}
+``` 
+
+To update or replace method behavior, you have to use descriptor.value (and apply to execute).
 
 ### Class decorator
+Here, you can see the react-redux connect decorator
+
+``` typescript 
+export type InferableComponentEnhancer<TInjectedProps> =
+    InferableComponentEnhancerWithProps<TInjectedProps, {}>;
+    
+export interface InferableComponentEnhancerWithProps<TInjectedProps, TNeedsProps> {
+    <P extends TInjectedProps>(
+        component: Component<P>
+    ): ComponentClass<Omit<P, keyof TInjectedProps> & TNeedsProps> & {WrappedComponent: Component<P>}
+};
+
+export interface Connect {
+    <TStateProps = {}, TDispatchProps = {}, TOwnProps = {}, State = {}>(
+        mapStateToProps: MapStateToPropsParam<TStateProps, TOwnProps, State>,
+        mapDispatchToProps: MapDispatchToPropsParam<TDispatchProps, TOwnProps>
+    ): InferableComponentEnhancerWithProps<TStateProps & TDispatchProps, TOwnProps>;
+};
+
+export declare const connect: Connect;
+
+const mapStateToProps = (state) => {
+  return { todos: state.todos };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return { actions: bindActionCreators(actionCreators, dispatch) };
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
+export default class MyApp extends React.Component {
+  // ...define your main app here
+}
+``` 
 
 ## React forms
 
