@@ -3,13 +3,12 @@
 Redux reducers handle state transitions, but they must be 
 handled synchronously.
 
-But what about Async like User interactions, ajax calls, web sockets or animations?
-More with harder to manage as ajax cancellation, composed ajax, etc.
+But what about Async like User interactions, ajax calls (with cancellation), web sockets or animations?
 
 See more with my presentation [async-reduc-observable](https://github.com/Bogala/async-redux-observable)
 
 ## Observables and RxJS
-What is an opbservable ?
+What is an observable ?
 * a set of events
 * 0, 1 or more values
 * over any amount of time
@@ -196,7 +195,7 @@ const mapDispatchToProps: MapDispatchToProps<AppEventProps, AppProps> = (dispatc
 });
 ``` 
 
-But, with this, our tests not work, we make one dispatch more by button clicked :
+But whith this our test won’t work, we make one dispatch more by button clicked :
 ``` typescript
     test('Pause button stop dispatchs', async () => {
         // tslint:disable-next-line:no-any
