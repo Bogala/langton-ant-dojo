@@ -10,9 +10,7 @@ import configureStore from 'redux-mock-store';
 
 import App from './';
 import { Ant } from './Grid';
-import { PLAY } from '../../store/actions';
-import { Action } from 'redux';
-import { AvPlayArrow } from 'material-ui/svg-icons';
+import { AvPlayArrow, AvPause } from 'material-ui/svg-icons';
 import { MemoryRouter } from 'react-router';
 import { Provider } from 'react-redux';
 
@@ -27,17 +25,55 @@ const store = mockStore({
     ant: new Ant()
 });
 
+jest.useFakeTimers();
+
 describe('App container', () => {
     test('renders without crashing', () => {
         container = shallow(<App />, { context: { store, router: { } } });
         expect(container.length).toEqual(1);
     });
 
-    test('map Dispatch to onClic prop', async () => {
-        store.dispatch = jest.fn();
-        // tslint:disable-next-line:max-line-length
-        const wrapper = mount(<Provider store={store}><MemoryRouter initialEntries={[ '/' ]}><App /></MemoryRouter></Provider>);
-        await wrapper.find(AvPlayArrow).simulate('click');
-        expect(store.dispatch).toBeCalledWith({ type: PLAY} as Action);
+    describe('Autoplay', () => {
+        test('Run starts twice when clicked', (done) => {
+            store.dispatch = jest.fn();
+            
+            const wrapper = 
+                mount(<Provider store={store}><MemoryRouter initialEntries={[ '/' ]}><App /></MemoryRouter></Provider>);
+            wrapper.find(AvPlayArrow).simulate('click');
+            jest.runOnlyPendingTimers();
+            jest.runOnlyPendingTimers();
+            expect(store.dispatch).toHaveBeenCalledTimes(2);
+            done();
+        });
+        test('Run stops when clicking pause button', (done) => {
+            store.dispatch = jest.fn();
+            
+            const wrapper = 
+                mount(<Provider store={store}><MemoryRouter initialEntries={[ '/' ]}><App /></MemoryRouter></Provider>);
+            wrapper.find(AvPlayArrow).simulate('click');
+
+            jest.runOnlyPendingTimers();
+            wrapper.find(AvPause).simulate('click');
+
+            jest.runOnlyPendingTimers();
+            expect(store.dispatch).toHaveBeenCalledTimes(1);
+            done();
+        });
+    });
+    describe('Bugs', () => {
+        test('Ant pauses after one click even if play has been clicked multiple times', (done) => {
+            store.dispatch = jest.fn();
+            
+            const wrapper = 
+                mount(<Provider store={store}><MemoryRouter initialEntries={[ '/' ]}><App /></MemoryRouter></Provider>);
+            wrapper.find(AvPlayArrow).simulate('click');
+            wrapper.find(AvPlayArrow).simulate('click');
+            wrapper.find(AvPause).simulate('click');
+    
+            jest.runOnlyPendingTimers();
+            expect(store.dispatch).not.toHaveBeenCalled();
+            done();
+        });
+
     });
 });

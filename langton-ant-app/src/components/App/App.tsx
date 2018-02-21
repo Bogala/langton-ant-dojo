@@ -1,25 +1,29 @@
 import * as React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { AppBar, IconButton, Card } from 'material-ui';
-import AvPlayArrow from 'material-ui/svg-icons/av/play-arrow';
 import Grid from './Grid';
 import { Route, Switch } from 'react-router-dom';
 import NotFound from './NotFound';
+import { AvPause, AvPlayArrow } from 'material-ui/svg-icons';
 
 export interface AppBindingProps {
   title?: string;
 }
 export interface AppEventProps {
-  onClick?: () => void;
+  onPause?: () => void;
+  onPlay?: () => void;
 }
 export interface AppProps extends AppBindingProps, AppEventProps { }
 
-const App = ({ title, onClick }: AppProps) => (
+const App = ({ title, onPause, onPlay }: AppProps) => (
   <MuiThemeProvider>
     <div>
       <AppBar
         title={title || 'Langton Ant'}
-        iconElementLeft={<IconButton><AvPlayArrow onClick={onClick} /></IconButton>}
+        iconElementLeft={<>
+          <IconButton><AvPlayArrow onClick={onPlay} /></IconButton>
+          <IconButton><AvPause onClick={onPause} /></IconButton>
+        </>}
       />
       <div>
         <div className="stretch">

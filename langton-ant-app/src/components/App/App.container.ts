@@ -4,10 +4,17 @@ import App, { AppProps, AppBindingProps, AppEventProps } from './App';
 import { Action } from 'redux';
 import { PLAY } from '../../store/actions';
 
+let refInterval: Array<NodeJS.Timer | number> = new Array();
 const mapStateToProps: MapStateToProps<AppBindingProps, AppProps, MainState> = (state, props) => ({});
 const mapDispatchToProps: MapDispatchToProps<AppEventProps, AppProps> = (dispatch, ownProps) => ({
-    onClick: () => {
-        dispatch({ type: PLAY} as Action);
+    onPlay: () => {
+        refInterval.push(setInterval(dispatch, 50, { type: PLAY } as Action));
+    },
+    onPause: () => {
+        refInterval.map((ref) => {
+            clearInterval(ref as number);
+        });
+        refInterval.slice();
     }
 });
 
