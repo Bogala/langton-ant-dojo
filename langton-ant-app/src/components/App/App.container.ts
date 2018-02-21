@@ -5,7 +5,9 @@ import { Action } from 'redux';
 import { PLAY } from '../../store/actions';
 
 let refInterval: Array<NodeJS.Timer | number> = new Array();
-const mapStateToProps: MapStateToProps<AppBindingProps, AppProps, MainState> = (state, props) => ({});
+const mapStateToProps: MapStateToProps<AppBindingProps, AppProps, MainState> = (state, props) => ({
+    title: 'Langton, counter = ' + state.counter
+});
 const mapDispatchToProps: MapDispatchToProps<AppEventProps, AppProps> = (dispatch, ownProps) => ({
     onPlay: () => {
         refInterval.push(setInterval(dispatch, 50, { type: PLAY } as Action));

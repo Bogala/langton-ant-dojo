@@ -32,10 +32,11 @@ describe('reducer', () => {
     expect(actual as MainState).toBeTruthy();
   });
 
-  test('should pass state by cdefault', () => {
+  test('should pass state by default', () => {
     class MockMainState implements MainState {
       grid: boolean[][];
       ant: Ant;
+      counter: number;
     }
     const actual = reducer(new MockMainState(), { type: null} as Action);
     expect(actual instanceof MockMainState).toBeTruthy();
@@ -62,6 +63,18 @@ describe('reducer', () => {
   test('initial state must have an ant at 10:10:0°', () => {
     const actual = reducer(undefined, { type: null} as Action);
     expect(actual.ant).toEqual(new Ant());
+  });
+
+  describe("Counter", () => {
+    test('initial state must have a counter at 0', () => {
+      const actual = reducer(undefined, { type: null} as Action);
+      expect(actual.counter).toEqual(0);
+    });  
+    
+    test('counter in state equals 10 after 10 iterations', () => {
+      const {counter} = initAndPlay(10);
+      expect(counter).toBe(10);
+    });
   });
 
   describe('[App]Step 3.1: First move', () => {

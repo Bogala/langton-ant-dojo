@@ -16,6 +16,7 @@ export class Ant {
 export interface MainState {
   grid: Array<Array<boolean>>;
   ant: Ant;
+  counter: number;
 }
 
 const initGrid = () => (
@@ -25,13 +26,15 @@ const initGrid = () => (
 
 const initialState: MainState = {
   grid: initGrid(),
-  ant: new Ant()
+  ant: new Ant(),
+  counter: 0
 };
 
 export default (state: MainState = initialState, action: Action) => {
   switch (action.type) {
     case PLAY: {
       const finalState = play(state);
+      
       return { ...finalState };
     }
     default:

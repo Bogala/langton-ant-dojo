@@ -13,6 +13,7 @@ import { Ant } from './Grid';
 import { AvPlayArrow, AvPause } from 'material-ui/svg-icons';
 import { MemoryRouter } from 'react-router';
 import { Provider } from 'react-redux';
+import { AppBar } from 'material-ui';
 
 // tslint:disable-next-line:no-any
 configure({ adapter: new Adapter() });
@@ -22,7 +23,8 @@ let container: ShallowWrapper;
 const store = mockStore({
     grid: new Array<Array<boolean>>(21).fill(new Array<boolean>(21))
         .map(() => new Array<boolean>(21).fill(false)),
-    ant: new Ant()
+    ant: new Ant(),
+    counter: 2
 });
 
 jest.useFakeTimers();
@@ -75,5 +77,15 @@ describe('App container', () => {
             done();
         });
 
+    });
+
+    describe('Mapping des props', () => {
+        test('Mise a jour du titre quand on  play', () => {
+            const wrapper = 
+                mount(<Provider store={store}><MemoryRouter initialEntries={[ '/' ]}><App /></MemoryRouter></Provider>);
+            
+            const title = wrapper.find(AppBar).prop('title');
+            expect(title).toBe('Langton, counter = 2');
+        });
     });
 });

@@ -38,4 +38,5 @@ describe('[App]Step 2 : a grid and an ant', () => {
     const wrapper = shallow(<App title="Langon Ant : First generation" />);
     expect(wrapper.find(AppBar).prop('title')).toBe('Langon Ant : First generation');
   });
+  
 });
