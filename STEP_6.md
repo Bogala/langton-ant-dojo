@@ -1,6 +1,4 @@
-# Advanced Typescript
-
-> Work in progress
+# Advanced Typescript & React forms
 
 In this last part, we'll learn some advanced typescript tools like Generics, Decorators or anbient declaration files. But also how to make forms in react.
 
@@ -74,7 +72,7 @@ A Decorator is a special kind of declaration that can be attached to a class dec
 
 We have 5 types of decorators : factories, methods, classes, parameters and properties. 
 
-### Method decorator
+### Method / Property decorator
 Method decorator can enhance the function described just below declaration. It can be used to observe, modify or replace a function definition.
 
 For example :
@@ -110,7 +108,12 @@ const log = (target: Object, key: string | symbol, descriptor: TypedPropertyDesc
 
 But, with that, you can not use function args or enhance existing.
 
+Property decorators are similar to method decorators. The only difference is they do not accept property descriptor as argument and do not return anything.
+
 ### Class decorator
+
+A class decorator is a function that accepts a constructor function and returns a contstructor function. Returning undefined is equivalent to returning the constructor function passed in as argument.
+
 Here, you can see the react-redux connect decorator
 
 ``` typescript 
@@ -144,10 +147,92 @@ const mapDispatchToProps = (dispatch) => {
 export default class MyApp extends React.Component {
   // ...define your main app here
 }
+```
+
+### Factory decorators
+
+In order to create a parametrized decorator you create a decorator factory that accepts arguments and returns the decorator function to be used.
+
+``` typescript
+const greaterOrEqual = (n: number)  => {
+    return (target: Object, key: string | symbol) => {
+        let value = target[key];
+ 
+        const getter = () =>  value;
+        const setter = (val) => {
+            if (val < n) {
+                throw new Error(`Value smaller than ${n}`);
+            }
+            value = val;
+        }
+        Reflect.deleteProperty[key];
+        Reflect.defineProperty(target, key, {
+            get: getter,
+            set: setter
+        });
+    }
+}
+ 
+ 
+class List {
+    @greaterOrEqual(0) length: number;
+}
+``` 
+
+### Parameter decorators
+
+A parameter decorator is a function that accepts 3 arguments: the object on which the method is defined or the construction function if the decorator is on a constructor argument, the key for the method (a string name or symbol) or undefined in case of constructor argument and the index of the parameter in the argument list. A property decorator does not return anything.
+
+``` typescript
+const LOGGED_PARAM_KEY = "logged_param";
+ 
+//Parameter decorator
+const  loggedParam = (target: Object, key: string | symbol, index: number) => {
+    const loggedParams: number[] = Reflect.getOwnMetadata(LOGGED_PARAM_KEY, target, key) || [];
+    loggedParams.push(index);
+    Reflect.defineMetadata(LOGGED_PARAM_KEY, loggedParams, target, key);
+}
+ 
+//Method decorator
+const logMethodParams = (target: Object, key: string, descriptor: TypedPropertyDescriptor<Function>) => {
+    const loggedParams: number[] = Reflect.getOwnMetadata(LOGGED_PARAM_KEY, target, key) || [];
+    return {
+        value: function( ... args: any[]) {
+            console.log("Logged params: ", loggedParams.map(index => args[index]).join(", "));
+            return descriptor.value.apply(target, args);
+        }
+    }
+}
+ 
+//Class decorator
+const logConstructorParams: ClassDecorator = <T>(target: new(...args: any[]) => T) => {
+    const loggedParams: number[] = Reflect.getOwnMetadata(LOGGED_PARAM_KEY, target) || [];
+    function newConstructor(... args) {
+        console.log("Logged params: ", loggedParams.map(index => args[index]).join(", "));
+        new target(args);
+    }
+    newConstructor.prototype = target.prototype;
+    return newConstructor;
+}
+ 
+@logConstructorParams
+class List<T> {
+    private items = new Array<T>();
+ 
+    constructor(@loggedParam private initialItem: T) {
+        this.items.push(initialItem);
+    }  
+ 
+    @logMethodParams
+    addItem(@loggedParam item: T) {
+      this.items.push(item);  
+    }
+}
 ``` 
 
 ## React forms
 
+> Work in progress
 
 # Reminders
 ![TDD Cycles](https://upload.wikimedia.org/wikipedia/commons/0/0b/TDD_Global_Lifecycle.png)
