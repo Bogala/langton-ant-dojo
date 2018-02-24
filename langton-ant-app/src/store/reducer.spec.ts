@@ -42,6 +42,7 @@ describe('reducer', () => {
       grid: boolean[][];
       ant: Ant;
       count: number;
+      gridLength: number;
     }
     const actual = reducer(new MockMainState(), { type: null } as Action);
     expect(actual instanceof MockMainState).toBeTruthy();

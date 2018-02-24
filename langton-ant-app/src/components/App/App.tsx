@@ -1,10 +1,12 @@
 import * as React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { AppBar, IconButton, Card } from 'material-ui';
+import { AppBar, IconButton, Card, Dialog } from 'material-ui';
 import Grid from './Grid';
 import { Route, Switch } from 'react-router-dom';
 import NotFound from './NotFound';
-import { AvPause, AvPlayArrow } from 'material-ui/svg-icons';
+import { AvPause, AvPlayArrow, AvEqualizer } from 'material-ui/svg-icons';
+import { AppProps } from './App';
+import UpdateGrid from './UpdateGrid';
 
 export interface AppBindingProps {
   title?: string;
@@ -15,26 +17,61 @@ export interface AppEventProps {
 }
 export interface AppProps extends AppBindingProps, AppEventProps { }
 
-const App = ({ title, onPlay, onPause }: AppProps) => (
-  <MuiThemeProvider>
-    <div>
-      <AppBar
-        title={title || 'Langton Ant'}
-        // tslint:disable-next-line:max-line-length
-        iconElementLeft={<><IconButton><AvPause onClick={onPause} /></IconButton> <IconButton><AvPlayArrow onClick={onPlay} /></IconButton></>}
-      />
-      <div>
-        <div className="stretch">
-          <Card className="md-card">
-            <Switch>
-              <Route path="/" component={Grid} exact={true} />
-              <Route component={NotFound} />
-            </Switch>
-          </Card>
+interface AppState {
+  isOpen: boolean;
+}
+
+class App extends React.Component<AppProps, AppState> {
+  constructor(props: AppProps) {
+    super(props);
+    this.state = {
+      isOpen: false
+    };
+  }
+
+  handleClickOpen = () => {
+    this.setState({ isOpen: true });
+  }
+
+  handleClose = () => {
+    this.setState({ isOpen: false });
+  }
+
+  render() {
+    const { title, onPause, onPlay } = this.props;
+    const { isOpen } = this.state;
+    return (
+      <MuiThemeProvider>
+        <div>
+          <AppBar
+            title={title || 'Langton Ant'}
+            // tslint:disable-next-line:max-line-length
+            iconElementLeft={<><IconButton><AvPause onClick={onPause} /></IconButton> <IconButton><AvPlayArrow onClick={onPlay} /></IconButton></>}
+            iconElementRight={<IconButton><AvEqualizer onClick={this.handleClickOpen} /></IconButton>}
+          />
+          <div>
+            <div className="stretch">
+              <Card className="md-card">
+                <Switch>
+                  <Route path="/" component={Grid} exact={true} />
+                  <Route component={NotFound} />
+                </Switch>
+              </Card>
+            </div>
+          </div>
+          <Dialog
+            title="Reset grid with parameters"
+            modal={false}
+            open={isOpen}
+            onRequestClose={this.handleClose}
+          >
+            <UpdateGrid />
+          </Dialog>
+
         </div>
-      </div>
-    </div>
-  </MuiThemeProvider>
-);
+      </MuiThemeProvider>
+    );
+  }
+}
 
 export default App;

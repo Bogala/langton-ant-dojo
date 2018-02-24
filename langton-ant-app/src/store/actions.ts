@@ -1,9 +1,21 @@
 import { MainState } from './';
+import { Action } from 'redux';
 
 export const PLAY = 'PLAY';
 export const PLAYED = 'PLAYED';
 export const PAUSED = 'PAUSED';
 export const REDIM = 'REDIM';
+export const RELOAD = 'RELOAD';
+
+export interface RedimData {
+    arrayLength: number;
+    antX: number;
+    antY: number;
+}
+
+export interface RedimAction extends Action {
+    payload: RedimData;
+}
 
 export const redim = ({ grid, ant, count }: MainState): MainState => {
     const length = grid.length;
@@ -20,7 +32,8 @@ export const redim = ({ grid, ant, count }: MainState): MainState => {
     return {
         ant: { ...ant },
         grid: [...grid],
-        count
+        count,
+        gridLength: grid.length
     };
 };
 
@@ -34,7 +47,8 @@ export const play = ({ grid, ant, count }: MainState): MainState => {
     return {
         ant: { ...ant, rotation: rotation, x: movement.x, y: movement.y },
         grid: [...grid],
-        count: cnt
+        count: cnt,
+        gridLength: grid.length
     };
 };
 
