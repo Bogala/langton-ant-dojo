@@ -26,13 +26,15 @@ const store = mockStore({
 
 describe('App container', () => {
     test('renders without crashing', () => {
-        container = shallow(<UpdateGrid />, { context: { store } });
+        const close = jest.fn();
+        container = shallow(<UpdateGrid handleClose={close} />, { context: { store } });
         expect(container.length).toEqual(1);
     });
 
     test('Submit launch', async () => {
+        const close = jest.fn();
         store.dispatch = jest.fn();
-        container = shallow(<UpdateGrid />, { context: { store } });
+        container = shallow(<UpdateGrid handleClose={close} />, { context: { store } });
         (container.props() as UpdateGridProps).submitForm(0, 0, 0);
         expect(store.dispatch).toBeCalled();
     });

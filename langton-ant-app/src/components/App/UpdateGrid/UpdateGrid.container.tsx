@@ -4,6 +4,10 @@ import { compose } from 'recompose';
 import UpdateGrid, { UpdateGridProps, UpdateGridEventProps, UpdateGridBindingProps } from './UpdateGrid';
 import { RELOAD } from '../../../store/actions';
 
+export interface UpdateGridContainerProps { 
+    handleClose: () => void;
+}
+
 const mapStateToProps: MapStateToProps<UpdateGridBindingProps, UpdateGridProps, MainState> = (state, props) => ({
     arrayLength: state.gridLength ,
     antX: state.ant.x,
@@ -20,10 +24,11 @@ const mapDispatchToProps: MapDispatchToProps<UpdateGridEventProps, UpdateGridPro
                 newAntY: y
             } 
         });
+        props.handleClose();
     }
 });
 
-const enhance = compose<UpdateGridProps, {}>(connect(mapStateToProps, mapDispatchToProps));
+const enhance = compose<UpdateGridProps, UpdateGridContainerProps>(connect(mapStateToProps, mapDispatchToProps));
 
 const UpdateGridEnhanced = enhance(UpdateGrid);
 

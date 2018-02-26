@@ -1,7 +1,7 @@
-import { MainState, Ant, default as reducer } from './reducer';
+import { MainState, Ant, default as reducer, PayloadedAction, ReloadParams } from './reducer';
 import { Action } from 'redux';
 import * as _ from 'lodash';
-import { PLAYED, REDIM } from './actions';
+import { PLAYED, REDIM, RELOAD } from './actions';
 
 interface GridCoordinates {
   x: number;
@@ -20,6 +20,18 @@ const initAndPlay = (playTimes: number = 1): MainState => {
 const initAndRedim = (): MainState => {
   const initialState = _.cloneDeep(reducer(undefined, { type: null } as Action));
   return reducer(initialState, { type: REDIM } as Action);
+};
+
+const initAndReload = (length?: number, x?: number, y?: number): MainState => {
+  const initialState = initAndPlay(15);
+  return reducer(initialState, {
+    type: RELOAD,
+    payload: {
+      newLength: length,
+      newAntX: x,
+      newAntY: y
+    }
+  } as PayloadedAction<ReloadParams>);
 };
 
 const expectGreyCells = (context: MainState, ...greyCells: Array<GridCoordinates>) => {
@@ -195,10 +207,22 @@ describe('reducer', () => {
       const { grid } = initAndRedim();
       expect(grid).toHaveLength(23);
     });
-    
+
     test('Redim change ant position', () => {
       const { ant } = initAndRedim();
       expect(ant).toEqual({ x: 11, y: 11, rotation: 0 } as Ant);
+    });
+  });
+
+  describe('Step 6: reload re-init grid', () => {
+    test('Reload change size an,d re-init status', () => {
+      const { grid } = initAndReload(90);
+      expect(grid).toHaveLength(90);
+    });
+
+    test('Redim change ant position', () => {
+      const { ant } = initAndReload(90, 60, 30);
+      expect(ant).toEqual({ x: 60, y: 30, rotation: 0 } as Ant);
     });
   });
 });

@@ -1,5 +1,5 @@
 import { MainState, Ant } from '.';
-import { redim } from './actions';
+import { redim, reload } from './actions';
 
 describe('Actions test', () => {
     test('Redim upgrade grid size', () => {
@@ -25,7 +25,29 @@ describe('Actions test', () => {
         ant.y++;
         const state = { grid, ant } as MainState;
         const result = redim(state).ant;
-        
-        expect(result).toEqual({x: 11, y: 12, rotation: 0} as Ant);
+
+        expect(result).toEqual({ x: 11, y: 12, rotation: 0 } as Ant);
+    });
+
+    test('Reload re-init grid with Ant as defined', () => {
+        expect(reload(90, 60, 30)).toEqual({
+            ant: new Ant(60, 30, 0),
+            grid: new Array<Array<boolean>>(90)
+                .fill(new Array<boolean>(90))
+                .map(() => new Array<boolean>(90).fill(false)),
+            count: 0,
+            gridLength: 90
+        });
+    });
+
+    test('Reload have default values', () => {
+        expect(reload()).toEqual({
+            ant: new Ant(10, 10, 0),
+            grid: new Array<Array<boolean>>(21)
+                .fill(new Array<boolean>(21))
+                .map(() => new Array<boolean>(21).fill(false)),
+            count: 0,
+            gridLength: 21
+        });
     });
 });

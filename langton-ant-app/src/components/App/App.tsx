@@ -8,6 +8,9 @@ import { AvPause, AvPlayArrow, AvEqualizer } from 'material-ui/svg-icons';
 import { AppProps } from './App';
 import UpdateGrid from './UpdateGrid';
 
+const customContentStyle = {
+  width: '300px',
+};
 export interface AppBindingProps {
   title?: string;
 }
@@ -64,8 +67,9 @@ class App extends React.Component<AppProps, AppState> {
             modal={false}
             open={isOpen}
             onRequestClose={this.handleClose}
+            contentStyle={customContentStyle}
           >
-            <UpdateGrid />
+            <UpdateGrid handleClose={this.handleClose} />
           </Dialog>
 
         </div>

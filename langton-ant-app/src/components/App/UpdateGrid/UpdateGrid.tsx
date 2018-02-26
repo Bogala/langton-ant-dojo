@@ -9,10 +9,11 @@ export interface UpdateGridBindingProps {
 
 export interface UpdateGridEventProps {
     submitForm: (length: number, x: number, y: number) => void;
-    onChange?: (e: React.FormEvent<HTMLInputElement>) => void;
 }
 
-export interface UpdateGridProps extends UpdateGridBindingProps, UpdateGridEventProps { }
+export interface UpdateGridProps extends UpdateGridBindingProps, UpdateGridEventProps { 
+    handleClose: () => void;
+}
 
 const changeEventValue = (e: {}): number => Number((e as React.ChangeEvent<HTMLInputElement>).currentTarget.value);
 
@@ -65,7 +66,7 @@ export default class UpdateGrid extends React.Component<UpdateGridProps> {
                 onChange={this.onChangeY}
                 value={this._y}
             /><br />
-            <RaisedButton label="Full width" fullWidth={true} onClick={this.onSubmit} />
+            <RaisedButton label="Re-init Grid" fullWidth={true} onClick={this.onSubmit} />
         </>
         );
     }

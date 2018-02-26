@@ -1,4 +1,4 @@
-import { MainState } from './';
+import { MainState, Ant } from './';
 import { Action } from 'redux';
 
 export const PLAY = 'PLAY';
@@ -84,4 +84,15 @@ const moveByRotation = (rotation: number, right: boolean) => {
         value.y = -value.y;
     }
     return value;
+};
+
+export const reload = (gridSize: number = 21, antPosX: number = 10, antPosY: number = 10): MainState => {
+    return {
+        ant: { x: antPosX, y: antPosY, rotation: 0} as Ant,
+        grid: new Array<Array<boolean>>(gridSize)
+            .fill(new Array<boolean>(gridSize))
+            .map(() => new Array<boolean>(gridSize).fill(false)),
+        count: 0,
+        gridLength: gridSize
+    };
 };
