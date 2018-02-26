@@ -230,9 +230,16 @@ class List<T> {
 }
 ``` 
 
-## React forms
+## New need
 
-> Work in progress
+Ok, here we want to add a modal dialog to re-init and resize grid with ant.
+On click on a specific button, a modal dialog will open with :
+* A new size field (default value : 21)
+* A new x coordinates for ant (default value : 10)
+* A new y coordinates for ant (default value : 10)
+* A button to re-init grid with previous values
+
+## Form creation
 
 # Reminders
 ![TDD Cycles](https://upload.wikimedia.org/wikipedia/commons/0/0b/TDD_Global_Lifecycle.png)
