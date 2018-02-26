@@ -498,7 +498,197 @@ export default class UpdateGrid extends React.Component<UpdateGridProps> {
 
 Ok, now, we have 3 inputs for default value and an event to ascend.
 
-Let's update our reducer !
+Let's update our store !
+
+### Store
+
+#### Action  method
+
+By tests 
+
+``` typescript
+test('Reload re-init grid with Ant as defined', () => {
+        expect(reload(90, 60, 30)).toEqual({
+            ant: new Ant(60, 30, 0),
+            grid: new Array<Array<boolean>>(90)
+                .fill(new Array<boolean>(90))
+                .map(() => new Array<boolean>(90).fill(false)),
+            count: 0,
+            gridLength: 90
+        });
+    });
+
+    test('Reload have default values', () => {
+        expect(reload()).toEqual({
+            ant: new Ant(10, 10, 0),
+            grid: new Array<Array<boolean>>(21)
+                .fill(new Array<boolean>(21))
+                .map(() => new Array<boolean>(21).fill(false)),
+            count: 0,
+            gridLength: 21
+        });
+    });
+``` 
+
+Code 
+
+``` typescript
+export const reload = (gridSize: number = 21, antPosX: number = 10, antPosY: number = 10): MainState => {
+    return {
+        ant: { x: antPosX, y: antPosY, rotation: 0} as Ant,
+        grid: new Array<Array<boolean>>(gridSize)
+            .fill(new Array<boolean>(gridSize))
+            .map(() => new Array<boolean>(gridSize).fill(false)),
+        count: 0,
+        gridLength: gridSize
+    };
+};
+``` 
+
+#### Reducer
+
+Tests :
+
+``` typescript
+  describe('Step 6: reload re-init grid', () => {
+    test('Reload change size an,d re-init status', () => {
+      const { grid } = initAndReload(90);
+      expect(grid).toHaveLength(90);
+    });
+
+    test('Redim change ant position', () => {
+      const { ant } = initAndReload(90, 60, 30);
+      expect(ant).toEqual({ x: 60, y: 30, rotation: 0 } as Ant);
+    });
+  });
+``` 
+
+our helper for tests
+
+``` typescript
+const initAndReload = (length?: number, x?: number, y?: number): MainState => {
+  const initialState = initAndPlay(15);
+  return reducer(initialState, {
+    type: RELOAD,
+    payload: {
+      newLength: length,
+      newAntX: x,
+      newAntY: y
+    }
+  } as PayloadedAction<ReloadParams>);
+};
+``` 
+
+and new types :
+
+``` typescript
+export const RELOAD = 'RELOAD';
+
+export interface PayloadedAction<T> extends Action {
+  payload: T;
+}
+
+export interface ReloadParams {
+  newLength: number;
+  newAntX: number;
+  newAntY: number;
+}
+``` 
+
+Code
+
+``` typescript
+export default (state: MainState = initialState, action: Action) => {
+  switch (action.type) {
+    case PLAYED: {
+      const finalState = play(state);
+      return { ...finalState };
+    }
+    case REDIM: {
+      const finalState = redim(state);
+      return { ...finalState };
+    }
+    case RELOAD: {
+      const { newLength, newAntX, newAntY } = (action as PayloadedAction<ReloadParams>).payload;
+      const finalState = reload(newLength, newAntX, newAntY);
+      return { ...finalState };
+    }
+    default:
+      return state;
+  }
+};
+``` 
+
+### Store-component connection
+
+By tests
+
+``` tsx
+const store = mockStore({
+    grid: new Array<Array<boolean>>(21).fill(new Array<boolean>(21))
+        .map(() => new Array<boolean>(21).fill(false)),
+    ant: new Ant(),
+    gridLength: 21
+});
+
+describe('App container', () => {
+    test('renders without crashing', () => {
+        const close = jest.fn();
+        container = shallow(<UpdateGrid handleClose={close} />, { context: { store } });
+        expect(container.length).toEqual(1);
+    });
+
+    test('Submit launch', async () => {
+        const close = jest.fn();
+        store.dispatch = jest.fn();
+        container = shallow(<UpdateGrid handleClose={close} />, { context: { store } });
+        (container.props() as UpdateGridProps).submitForm(0, 0, 0);
+        expect(store.dispatch).toBeCalled();
+    });
+});
+``` 
+
+Code 
+
+``` typescript
+export interface UpdateGridContainerProps { 
+    handleClose: () => void;
+}
+
+const mapStateToProps: MapStateToProps<UpdateGridBindingProps, UpdateGridProps, MainState> = (state, props) => ({
+    arrayLength: 21 ,
+    antX: 10,
+    antY: 10
+});
+
+const mapDispatchToProps: MapDispatchToProps<UpdateGridEventProps, UpdateGridProps> = (dispatch, props) => ({
+    submitForm: (length: number, x: number, y: number) => {
+        dispatch({ 
+            type: RELOAD,
+            payload: {
+                newLength: length,
+                newAntX: x,
+                newAntY: y
+            } 
+        });
+        props.handleClose();
+    }
+});
+
+const enhance = compose<UpdateGridProps, UpdateGridContainerProps>(connect(mapStateToProps, mapDispatchToProps));
+
+const UpdateGridEnhanced = enhance(UpdateGrid);
+
+export default UpdateGridEnhanced;
+``` 
+
+Now, our new form works.
+
+If we add little spice? Let's add decorators to validate form data !
+
+## Validation decorators in real
+
+> Under construction
 
 # Reminders
 ![TDD Cycles](https://upload.wikimedia.org/wikipedia/commons/0/0b/TDD_Global_Lifecycle.png)
