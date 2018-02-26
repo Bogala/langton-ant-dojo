@@ -230,9 +230,465 @@ class List<T> {
 }
 ``` 
 
-## React forms
+## New need
 
-> Work in progress
+Ok, here we want to add a modal dialog to re-init and resize grid with ant.
+On click on a specific button, a modal dialog will open with :
+* A new size field (default value : 21)
+* A new x coordinates for ant (default value : 10)
+* A new y coordinates for ant (default value : 10)
+* A button to re-init grid with previous values
+
+## Form creation
+
+### Update App Component
+By the tests first :
+
+``` tsx
+  test('AppBar must have a settings buttone', () => {
+    const click = () => { return; };
+    const wrapper = shallow(<App onPlay={click} onPause={click} />);
+    const { iconElementRight } = wrapper.find(AppBar).props();
+    expect(iconElementRight).toBeDefined();
+  });
+``` 
+
+And the code :
+
+``` jsx
+<AppBar title={title || 'Langton Ant'}
+        iconElementLeft={<><IconButton><AvPause onClick={onPause} /></IconButton> <IconButton><AvPlayArrow onClick={onPlay} /></IconButton></>}
+        iconElementRight={<IconButton><AvEqualizer onClick={this.handleClickOpen} /></IconButton>}
+/>
+``` 
+
+Now add a [MaterialUI Modal Dialog](http://www.material-ui.com/#/components/dialog) :
+
+``` jsx
+<Dialog
+  title="Reset grid with parameters"
+  modal={false}
+>
+  <div />
+</Dialog>
+```  
+
+To manage dialog, we have to add state (no in redux because it's specific for our component) :
+
+``` jsx
+const customContentStyle = {
+  width: '300px',
+};
+
+interface AppState {
+  isOpen: boolean;
+}
+
+class App extends React.Component<AppProps, AppState> {
+  constructor(props: AppProps) {
+    super(props);
+    this.state = {
+      isOpen: false
+    };
+  }
+
+  handleClickOpen = () => {
+    this.setState({ isOpen: true });
+  }
+
+  handleClose = () => {
+    this.setState({ isOpen: false });
+  }
+
+  render() {
+    const { title, onPause, onPlay } = this.props;
+    const { isOpen } = this.state;
+    return (
+      <MuiThemeProvider>
+        <div>
+          <AppBar
+            title={title || 'Langton Ant'}
+            // tslint:disable-next-line:max-line-length
+            iconElementLeft={<><IconButton><AvPause onClick={onPause} /></IconButton> <IconButton><AvPlayArrow onClick={onPlay} /></IconButton></>}
+            iconElementRight={<IconButton><AvEqualizer onClick={this.handleClickOpen} /></IconButton>}
+          />
+          <div>
+            <div className="stretch">
+              <Card className="md-card">
+                <Switch>
+                  <Route path="/" component={Grid} exact={true} />
+                  <Route component={NotFound} />
+                </Switch>
+              </Card>
+            </div>
+          </div>
+          <Dialog
+            title="Reset grid with parameters"
+            modal={false}
+            open={isOpen}
+            onRequestClose={this.handleClose}
+            contentStyle={customContentStyle}
+          >
+            <div />
+          </Dialog>
+
+        </div>
+      </MuiThemeProvider>
+    );
+  }
+}
+``` 
+
+Tests (yes, we don't have to test React Library) :
+
+``` typescript
+test('App handles must call setState', async () => {
+    const app = new App({});
+    app.setState = jest.fn();
+    app.handleClickOpen();
+    expect(app.setState).toBeCalledWith({ isOpen: true });
+    app.handleClose();
+    expect(app.setState).toBeCalledWith({ isOpen: false });
+  });
+``` 
+
+### Add Form Component
+
+Tests
+
+``` tsx
+    test('Render match snapshot ', () => {
+        const click = () => {
+            // Do nothing 
+        };
+
+        const close = jest.fn();
+        // tslint:disable-next-line:max-line-length
+        const component = renderer.create(<MuiThemeProvider><Component arrayLength={21} antX={11} antY={11} submitForm={click} handleClose={close} /></MuiThemeProvider>).toJSON();
+        expect(component).toMatchSnapshot();
+    });
+``` 
+
+Code 
+
+``` tsx
+export interface UpdateGridBindingProps {
+    arrayLength: number;
+    antX: number;
+    antY: number;
+}
+
+export interface UpdateGridEventProps { }
+
+export interface UpdateGridProps extends UpdateGridBindingProps, UpdateGridEventProps { }
+
+export default ({ arrayLength, antX, antY }) => (
+            <>
+                <TextField
+                    id="arrayLength"
+                    defaultValue={arrayLength}
+                    floatingLabelText="Grid Size (number)"
+                /><br /><TextField
+                    id="antX"
+                    defaultValue={antX}
+                    floatingLabelText="Ant X Position"
+                /><br /><TextField
+                    id="antY"
+                    defaultValue={antY}
+                    floatingLabelText="Ant Y Position"
+                /><br />
+                <RaisedButton label="Re-init Grid" fullWidth={true} />
+            </>
+);
+``` 
+
+No behavior, just graphics. So, only a snapshot test.
+
+To add behavior, we have to add this tes :
+
+``` tsx
+test('ChangeEvent update values sended to submitForm', async () => {
+    const click = jest.fn();
+    const close = jest.fn();
+
+    const form = new Component({arrayLength: 21, antX: 10, antY: 10, submitForm: click, handleClose: close});
+    form.onChangeLength({ currentTarget: { value: '90'}});
+    form.onChangeX({ currentTarget: { value: '60'}});
+    form.onChangeY({ currentTarget: { value: '30'}});
+    form.onSubmit();
+
+    expect(click).toBeCalledWith(90, 60, 30);
+});
+``` 
+
+That's make a little revolution as :
+
+``` tsx
+export interface UpdateGridBindingProps {
+    arrayLength: number;
+    antX: number;
+    antY: number;
+}
+
+export interface UpdateGridEventProps {
+    submitForm: (length: number, x: number, y: number) => void;
+}
+
+export interface UpdateGridProps extends UpdateGridBindingProps, UpdateGridEventProps { 
+    handleClose: () => void;
+}
+
+const changeEventValue = (e: {}): number => Number((e as React.ChangeEvent<HTMLInputElement>).currentTarget.value);
+
+export default class UpdateGrid extends React.Component<UpdateGridProps> {
+    private _lgth:  number;
+    private _x:  number;
+    private _y:  number;
+
+    constructor(props: UpdateGridProps) {
+        super(props);
+    }
+
+    onChangeLength = (e: {}) => {
+        // this._lgth 
+        this._lgth = changeEventValue(e);
+    }
+
+    onChangeX = (e: {}) => {
+        this._x = changeEventValue(e);
+    }
+
+    onChangeY = (e: {}) => {
+        this._y = changeEventValue(e);
+    }
+
+    onSubmit = () => {
+        this.props.submitForm(this._lgth, this._x, this._y);
+    }
+
+    render() {
+        const { arrayLength, antX, antY } = this.props;
+        return (
+            <>
+                <TextField
+                    id="arrayLength"
+                    defaultValue={arrayLength}
+                    floatingLabelText="Grid Size (number)"
+                    onChange={this.onChangeLength}
+                    value={this._lgth}
+                /><br /><TextField
+                    id="antX"
+                    defaultValue={antX}
+                    floatingLabelText="Ant X Position"
+                    onChange={this.onChangeX}
+                    value={this._x}
+                /><br /><TextField
+                    id="antY"
+                    defaultValue={antY}
+                    floatingLabelText="Ant Y Position"
+                    onChange={this.onChangeY}
+                    value={this._y}
+                /><br />
+                <RaisedButton label="Re-init Grid" fullWidth={true} onClick={this.onSubmit} />
+            </>
+        );
+    }
+}
+``` 
+
+Ok, now, we have 3 inputs for default value and an event to ascend.
+
+Let's update our store !
+
+### Store
+
+#### Action  method
+
+By tests 
+
+``` typescript
+test('Reload re-init grid with Ant as defined', () => {
+        expect(reload(90, 60, 30)).toEqual({
+            ant: new Ant(60, 30, 0),
+            grid: new Array<Array<boolean>>(90)
+                .fill(new Array<boolean>(90))
+                .map(() => new Array<boolean>(90).fill(false)),
+            count: 0,
+            gridLength: 90
+        });
+    });
+
+    test('Reload have default values', () => {
+        expect(reload()).toEqual({
+            ant: new Ant(10, 10, 0),
+            grid: new Array<Array<boolean>>(21)
+                .fill(new Array<boolean>(21))
+                .map(() => new Array<boolean>(21).fill(false)),
+            count: 0,
+            gridLength: 21
+        });
+    });
+``` 
+
+Code 
+
+``` typescript
+export const reload = (gridSize: number = 21, antPosX: number = 10, antPosY: number = 10): MainState => {
+    return {
+        ant: { x: antPosX, y: antPosY, rotation: 0} as Ant,
+        grid: new Array<Array<boolean>>(gridSize)
+            .fill(new Array<boolean>(gridSize))
+            .map(() => new Array<boolean>(gridSize).fill(false)),
+        count: 0,
+        gridLength: gridSize
+    };
+};
+``` 
+
+#### Reducer
+
+Tests :
+
+``` typescript
+  describe('Step 6: reload re-init grid', () => {
+    test('Reload change size an,d re-init status', () => {
+      const { grid } = initAndReload(90);
+      expect(grid).toHaveLength(90);
+    });
+
+    test('Redim change ant position', () => {
+      const { ant } = initAndReload(90, 60, 30);
+      expect(ant).toEqual({ x: 60, y: 30, rotation: 0 } as Ant);
+    });
+  });
+``` 
+
+our helper for tests
+
+``` typescript
+const initAndReload = (length?: number, x?: number, y?: number): MainState => {
+  const initialState = initAndPlay(15);
+  return reducer(initialState, {
+    type: RELOAD,
+    payload: {
+      newLength: length,
+      newAntX: x,
+      newAntY: y
+    }
+  } as PayloadedAction<ReloadParams>);
+};
+``` 
+
+and new types :
+
+``` typescript
+export const RELOAD = 'RELOAD';
+
+export interface PayloadedAction<T> extends Action {
+  payload: T;
+}
+
+export interface ReloadParams {
+  newLength: number;
+  newAntX: number;
+  newAntY: number;
+}
+``` 
+
+Code
+
+``` typescript
+export default (state: MainState = initialState, action: Action) => {
+  switch (action.type) {
+    case PLAYED: {
+      const finalState = play(state);
+      return { ...finalState };
+    }
+    case REDIM: {
+      const finalState = redim(state);
+      return { ...finalState };
+    }
+    case RELOAD: {
+      const { newLength, newAntX, newAntY } = (action as PayloadedAction<ReloadParams>).payload;
+      const finalState = reload(newLength, newAntX, newAntY);
+      return { ...finalState };
+    }
+    default:
+      return state;
+  }
+};
+``` 
+
+### Store-component connection
+
+By tests
+
+``` tsx
+const store = mockStore({
+    grid: new Array<Array<boolean>>(21).fill(new Array<boolean>(21))
+        .map(() => new Array<boolean>(21).fill(false)),
+    ant: new Ant(),
+    gridLength: 21
+});
+
+describe('App container', () => {
+    test('renders without crashing', () => {
+        const close = jest.fn();
+        container = shallow(<UpdateGrid handleClose={close} />, { context: { store } });
+        expect(container.length).toEqual(1);
+    });
+
+    test('Submit launch', async () => {
+        const close = jest.fn();
+        store.dispatch = jest.fn();
+        container = shallow(<UpdateGrid handleClose={close} />, { context: { store } });
+        (container.props() as UpdateGridProps).submitForm(0, 0, 0);
+        expect(store.dispatch).toBeCalled();
+    });
+});
+``` 
+
+Code 
+
+``` typescript
+export interface UpdateGridContainerProps { 
+    handleClose: () => void;
+}
+
+const mapStateToProps: MapStateToProps<UpdateGridBindingProps, UpdateGridProps, MainState> = (state, props) => ({
+    arrayLength: 21 ,
+    antX: 10,
+    antY: 10
+});
+
+const mapDispatchToProps: MapDispatchToProps<UpdateGridEventProps, UpdateGridProps> = (dispatch, props) => ({
+    submitForm: (length: number, x: number, y: number) => {
+        dispatch({ 
+            type: RELOAD,
+            payload: {
+                newLength: length,
+                newAntX: x,
+                newAntY: y
+            } 
+        });
+        props.handleClose();
+    }
+});
+
+const enhance = compose<UpdateGridProps, UpdateGridContainerProps>(connect(mapStateToProps, mapDispatchToProps));
+
+const UpdateGridEnhanced = enhance(UpdateGrid);
+
+export default UpdateGridEnhanced;
+``` 
+
+Now, our new form works.
+
+If we add little spice? Let's add decorators to validate form data !
+
+## Validation decorators in real
+
+> Under construction
 
 # Reminders
 ![TDD Cycles](https://upload.wikimedia.org/wikipedia/commons/0/0b/TDD_Global_Lifecycle.png)

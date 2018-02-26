@@ -9,9 +9,9 @@ export interface UpdateGridContainerProps {
 }
 
 const mapStateToProps: MapStateToProps<UpdateGridBindingProps, UpdateGridProps, MainState> = (state, props) => ({
-    arrayLength: state.gridLength ,
-    antX: state.ant.x,
-    antY: state.ant.y
+    arrayLength: 21 ,
+    antX: 10,
+    antY: 10
 });
 // tslint:disable-next-line:max-line-length
 const mapDispatchToProps: MapDispatchToProps<UpdateGridEventProps, UpdateGridProps> = (dispatch, props) => ({
