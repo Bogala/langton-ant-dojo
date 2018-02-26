@@ -241,6 +241,265 @@ On click on a specific button, a modal dialog will open with :
 
 ## Form creation
 
+### Update App Component
+By the tests first :
+
+``` tsx
+  test('AppBar must have a settings buttone', () => {
+    const click = () => { return; };
+    const wrapper = shallow(<App onPlay={click} onPause={click} />);
+    const { iconElementRight } = wrapper.find(AppBar).props();
+    expect(iconElementRight).toBeDefined();
+  });
+``` 
+
+And the code :
+
+``` jsx
+<AppBar title={title || 'Langton Ant'}
+        iconElementLeft={<><IconButton><AvPause onClick={onPause} /></IconButton> <IconButton><AvPlayArrow onClick={onPlay} /></IconButton></>}
+        iconElementRight={<IconButton><AvEqualizer onClick={this.handleClickOpen} /></IconButton>}
+/>
+``` 
+
+Now add a [MaterialUI Modal Dialog](http://www.material-ui.com/#/components/dialog) :
+
+``` jsx
+<Dialog
+  title="Reset grid with parameters"
+  modal={false}
+>
+  <div />
+</Dialog>
+```  
+
+To manage dialog, we have to add state (no in redux because it's specific for our component) :
+
+``` jsx
+const customContentStyle = {
+  width: '300px',
+};
+
+interface AppState {
+  isOpen: boolean;
+}
+
+class App extends React.Component<AppProps, AppState> {
+  constructor(props: AppProps) {
+    super(props);
+    this.state = {
+      isOpen: false
+    };
+  }
+
+  handleClickOpen = () => {
+    this.setState({ isOpen: true });
+  }
+
+  handleClose = () => {
+    this.setState({ isOpen: false });
+  }
+
+  render() {
+    const { title, onPause, onPlay } = this.props;
+    const { isOpen } = this.state;
+    return (
+      <MuiThemeProvider>
+        <div>
+          <AppBar
+            title={title || 'Langton Ant'}
+            // tslint:disable-next-line:max-line-length
+            iconElementLeft={<><IconButton><AvPause onClick={onPause} /></IconButton> <IconButton><AvPlayArrow onClick={onPlay} /></IconButton></>}
+            iconElementRight={<IconButton><AvEqualizer onClick={this.handleClickOpen} /></IconButton>}
+          />
+          <div>
+            <div className="stretch">
+              <Card className="md-card">
+                <Switch>
+                  <Route path="/" component={Grid} exact={true} />
+                  <Route component={NotFound} />
+                </Switch>
+              </Card>
+            </div>
+          </div>
+          <Dialog
+            title="Reset grid with parameters"
+            modal={false}
+            open={isOpen}
+            onRequestClose={this.handleClose}
+            contentStyle={customContentStyle}
+          >
+            <div />
+          </Dialog>
+
+        </div>
+      </MuiThemeProvider>
+    );
+  }
+}
+``` 
+
+Tests (yes, we don't have to test React Library) :
+
+``` typescript
+test('App handles must call setState', async () => {
+    const app = new App({});
+    app.setState = jest.fn();
+    app.handleClickOpen();
+    expect(app.setState).toBeCalledWith({ isOpen: true });
+    app.handleClose();
+    expect(app.setState).toBeCalledWith({ isOpen: false });
+  });
+``` 
+
+### Add Form Component
+
+Tests
+
+``` tsx
+    test('Render match snapshot ', () => {
+        const click = () => {
+            // Do nothing 
+        };
+
+        const close = jest.fn();
+        // tslint:disable-next-line:max-line-length
+        const component = renderer.create(<MuiThemeProvider><Component arrayLength={21} antX={11} antY={11} submitForm={click} handleClose={close} /></MuiThemeProvider>).toJSON();
+        expect(component).toMatchSnapshot();
+    });
+``` 
+
+Code 
+
+``` tsx
+export interface UpdateGridBindingProps {
+    arrayLength: number;
+    antX: number;
+    antY: number;
+}
+
+export interface UpdateGridEventProps { }
+
+export interface UpdateGridProps extends UpdateGridBindingProps, UpdateGridEventProps { }
+
+export default ({ arrayLength, antX, antY }) => (
+            <>
+                <TextField
+                    id="arrayLength"
+                    defaultValue={arrayLength}
+                    floatingLabelText="Grid Size (number)"
+                /><br /><TextField
+                    id="antX"
+                    defaultValue={antX}
+                    floatingLabelText="Ant X Position"
+                /><br /><TextField
+                    id="antY"
+                    defaultValue={antY}
+                    floatingLabelText="Ant Y Position"
+                /><br />
+                <RaisedButton label="Re-init Grid" fullWidth={true} />
+            </>
+);
+``` 
+
+No behavior, just graphics. So, only a snapshot test.
+
+To add behavior, we have to add this tes :
+
+``` tsx
+test('ChangeEvent update values sended to submitForm', async () => {
+    const click = jest.fn();
+    const close = jest.fn();
+
+    const form = new Component({arrayLength: 21, antX: 10, antY: 10, submitForm: click, handleClose: close});
+    form.onChangeLength({ currentTarget: { value: '90'}});
+    form.onChangeX({ currentTarget: { value: '60'}});
+    form.onChangeY({ currentTarget: { value: '30'}});
+    form.onSubmit();
+
+    expect(click).toBeCalledWith(90, 60, 30);
+});
+``` 
+
+That's make a little revolution as :
+
+``` tsx
+export interface UpdateGridBindingProps {
+    arrayLength: number;
+    antX: number;
+    antY: number;
+}
+
+export interface UpdateGridEventProps {
+    submitForm: (length: number, x: number, y: number) => void;
+}
+
+export interface UpdateGridProps extends UpdateGridBindingProps, UpdateGridEventProps { 
+    handleClose: () => void;
+}
+
+const changeEventValue = (e: {}): number => Number((e as React.ChangeEvent<HTMLInputElement>).currentTarget.value);
+
+export default class UpdateGrid extends React.Component<UpdateGridProps> {
+    private _lgth:  number;
+    private _x:  number;
+    private _y:  number;
+
+    constructor(props: UpdateGridProps) {
+        super(props);
+    }
+
+    onChangeLength = (e: {}) => {
+        // this._lgth 
+        this._lgth = changeEventValue(e);
+    }
+
+    onChangeX = (e: {}) => {
+        this._x = changeEventValue(e);
+    }
+
+    onChangeY = (e: {}) => {
+        this._y = changeEventValue(e);
+    }
+
+    onSubmit = () => {
+        this.props.submitForm(this._lgth, this._x, this._y);
+    }
+
+    render() {
+        const { arrayLength, antX, antY } = this.props;
+        return (
+            <>
+                <TextField
+                    id="arrayLength"
+                    defaultValue={arrayLength}
+                    floatingLabelText="Grid Size (number)"
+                    onChange={this.onChangeLength}
+                    value={this._lgth}
+                /><br /><TextField
+                    id="antX"
+                    defaultValue={antX}
+                    floatingLabelText="Ant X Position"
+                    onChange={this.onChangeX}
+                    value={this._x}
+                /><br /><TextField
+                    id="antY"
+                    defaultValue={antY}
+                    floatingLabelText="Ant Y Position"
+                    onChange={this.onChangeY}
+                    value={this._y}
+                /><br />
+                <RaisedButton label="Re-init Grid" fullWidth={true} onClick={this.onSubmit} />
+            </>
+        );
+    }
+}
+``` 
+
+Ok, now, we have 3 inputs for default value and an event to ascend.
+
+Let's update our reducer !
+
 # Reminders
 ![TDD Cycles](https://upload.wikimedia.org/wikipedia/commons/0/0b/TDD_Global_Lifecycle.png)
 5 Steps to reproduce every cycle:
