@@ -70,6 +70,7 @@ Array [
         }
       }
       type="text"
+      value={undefined}
     />
     <div>
       <hr
@@ -183,6 +184,7 @@ Array [
         }
       }
       type="text"
+      value={undefined}
     />
     <div>
       <hr
@@ -296,6 +298,7 @@ Array [
         }
       }
       type="text"
+      value={undefined}
     />
     <div>
       <hr

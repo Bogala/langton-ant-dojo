@@ -33,7 +33,7 @@ describe('App container', () => {
     test('Submit launch', async () => {
         store.dispatch = jest.fn();
         container = shallow(<UpdateGrid />, { context: { store } });
-        (container.props() as UpdateGridProps).submitForm();
+        (container.props() as UpdateGridProps).submitForm(0, 0, 0);
         expect(store.dispatch).toBeCalled();
     });
 });
