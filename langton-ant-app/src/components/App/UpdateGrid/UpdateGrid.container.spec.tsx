@@ -10,13 +10,19 @@ import configureStore from 'redux-mock-store';
 
 import UpdateGrid from './';
 import { UpdateGridProps } from './UpdateGrid';
+import { Ant } from '../Grid';
 
 // tslint:disable-next-line:no-any
 configure({ adapter: new Adapter() });
 
 const mockStore = configureStore();
 let container: ShallowWrapper;
-const store = mockStore({});
+const store = mockStore({
+    grid: new Array<Array<boolean>>(21).fill(new Array<boolean>(21))
+        .map(() => new Array<boolean>(21).fill(false)),
+    ant: new Ant(),
+    gridLength: 21
+});
 
 describe('App container', () => {
     test('renders without crashing', () => {
