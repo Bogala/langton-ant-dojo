@@ -450,7 +450,6 @@ export default class UpdateGrid extends React.Component<UpdateGridProps> {
     }
 
     onChangeLength = (e: {}) => {
-        // this._lgth 
         this._lgth = changeEventValue(e);
     }
 
@@ -688,24 +687,260 @@ If we add little spice? Let's add decorators to validate form data !
 
 ## Validation decorators in real
 
-> Under construction
+Ok, now add a new decorator.
 
-# Reminders
-![TDD Cycles](https://upload.wikimedia.org/wikipedia/commons/0/0b/TDD_Global_Lifecycle.png)
-5 Steps to reproduce every cycle:
-1. Add a new test
-1. Run all tests and verify if the new test fails
-1. Write code to pass the new test to green
-1. Run all tests and verify all are green
-1. Refactor
+Tests first
 
-Before each test, launch a five minutes timer.
-* If the code compiles and the tests are green, commit!
-* Otherwise, revert!
+``` typescript
+class Test {
 
-All of __your__ code must be covered by unit tests.
+    @isValidNumber(
+        (n) => n > 5,
+        (n) => 'error'    
+    )
+    numericValue: number = 6;
+}
 
-We'll avoid `any` as much as possible (implicit or not).
+describe('validation tools', () => {
+    test('return value if on pattern ', () => {
+        const tst = new Test();
+        tst.numericValue = 7;
+
+        expect(tst.numericValue).toBe(7);
+    });
+
+    test('error if not ', () => {
+        const tst = new Test();
+
+        expect(() => {
+            tst.numericValue = 0;
+        }).toThrow();
+    });
+});
+``` 
+
+Here we want a validation data decorator. It takes 2 args :
+* a predicate to say if data is valid
+* a function that return error message if data not valid
+
+If the data is not valid, we want that the decorator raise an exception.
+
+Now the decorator
+
+``` typescript
+// tslint:disable-next-line:max-line-length
+export const isValidNumber = (predicate: (value: number) => boolean, errorMessage: (value: number) => string) => {
+    return (target: Object, key: string | symbol) => {
+        let value = target[key];
+
+        const getter = () => value;
+        // tslint:disable-next-line:no-any
+        const setter = (val: any) => {
+            if (!predicate(val)) {
+                throw new Error(errorMessage(val));
+            }
+            value = val;
+
+        };
+        // tslint:disable-next-line:no-unused-expression
+        Reflect.deleteProperty[key];
+        Reflect.defineProperty(target, key, {
+            get: getter,
+            set: setter
+        });
+    };
+};
+``` 
+
+Very easy, we update getter and setter on property with Reflect tool.
+
+### Some tests in form
+In our form, we need :
+* If form is valid, button works and dispatch message to redux
+* if one data is invalid, show it on TextField
+* Length is valid when positive and odd value
+* X is valid when positive value
+* Y is valid when positive value
+
+All works only with class
+
+``` tsx
+test('ChangeEvent update values sended to submitForm', async () => {
+      const click = jest.fn();
+      const close = jest.fn();
+
+      const form = new Component({ submitForm: click, handleClose: close });
+      form.onChangeLength({ currentTarget: { value: '91' } });
+      form.onChangeX({ currentTarget: { value: '60' } });
+      form.onChangeY({ currentTarget: { value: '30' } });
+      form.onSubmit();
+
+      expect(click).toBeCalledWith(91, 60, 30);
+  });
+  
+    test('If all data valid, no error message', async () => {
+        const click = jest.fn();
+        const close = jest.fn();
+        // tslint:disable-next-line:max-line-length
+        const component = mount(<MuiThemeProvider><Component submitForm={click} handleClose={close} /></MuiThemeProvider>);
+        await component.find(TextField).at(0).simulate('change', 21);
+        await component.find(TextField).at(1).simulate('change', 10);
+        await component.find(TextField).at(2).simulate('change', 10);
+        expect(component.find(TextField).at(0).prop('errorText')).not.toBeDefined();
+        expect(component.find(TextField).at(1).prop('errorText')).not.toBeDefined();
+        expect(component.find(TextField).at(2).prop('errorText')).not.toBeDefined();
+    });
+``` 
+
+Example test with no valid data :
+
+``` tsx
+    test('Not odd value for length cancel dispatch', async () => {
+        const click = jest.fn();
+        const close = jest.fn();
+        // tslint:disable-next-line:max-line-length
+        const component = mount(<MuiThemeProvider><Component submitForm={click} handleClose={close} /></MuiThemeProvider>);
+        await component.find(TextField).at(0).simulate('change', 90);
+        await component.find(RaisedButton).at(0).simulate('click');
+        expect(click).not.toBeCalled();
+        expect(component.find(TextField).at(0).prop('errorText')).not.toBe('');
+    });
+``` 
+
+Our updated component :
+
+``` tsx
+export default class UpdateGrid extends React.Component<UpdateGridProps> {
+    @isValidNumber(
+        (n) => (n > 0 && Math.abs(n % 2) === 1),
+        (n) => `${n} is not positive or odd`
+    )
+    private _lgth: number;
+
+    @isValidNumber(
+        (n) => (n > 0),
+        (n) => `${n} is not positive`
+    )
+    private _x: number;
+
+    @isValidNumber(
+        (n) => (n > 0),
+        (n) => `${n} is not positive`
+    )
+    private _y: number;
+
+    private _lgthInput: TextField | null;
+    private _xInput: TextField | null;
+    private _yInput: TextField | null;
+
+    private _canUpdate = false;
+
+    constructor(props: UpdateGridProps) {
+        super(props);
+    }
+
+    onChangeLength = (e: {}) => {
+        let msgErr: string = '';
+        try {
+            this._lgth = changeEventValue(e);
+        } catch (error) {
+            msgErr = error.message;
+        }
+        if (this._lgthInput) {
+            /* istanbul ignore next line */
+            this._lgthInput.setState({ errorText: msgErr });
+        }
+        this._canUpdate = msgErr === '';
+    }
+
+    onChangeX = (e: {}) => {
+        let msgErr: string = '';
+        try {
+            this._x = changeEventValue(e);
+        } catch (error) {
+            msgErr = error.message;
+        }
+        if (this._xInput) {
+            /* istanbul ignore next */
+            this._xInput.setState({ errorText: msgErr });
+        }
+        this._canUpdate = msgErr === '';
+    }
+
+    onChangeY = (e: {}) => {
+        let msgErr: string = '';
+        try {
+            this._y = changeEventValue(e);
+        } catch (error) {
+            msgErr = error.message;
+        }
+        if (this._yInput) {
+            /* istanbul ignore next */
+            this._yInput.setState({ errorText: msgErr });
+        }
+        this._canUpdate = msgErr === '';
+    }
+
+    onSubmit = () => {
+        if (this._canUpdate) {
+            this.props.submitForm(this._lgth, this._x, this._y);
+        }
+    }
+
+    render() {
+        return (
+            <>
+                <TextField
+                    ref={r => this._lgthInput = r}
+                    defaultValue="21"
+                    floatingLabelText="Grid Size (number)"
+                    onChange={this.onChangeLength}
+                    value={this._lgth}
+                /><br /><TextField
+                    ref={r => this._xInput = r}
+                    defaultValue="10"
+                    floatingLabelText="Ant X Position"
+                    onChange={this.onChangeX}
+                    value={this._x}
+                /><br /><TextField
+                    ref={r => this._yInput = r}
+                    defaultValue="10"
+                    floatingLabelText="Ant Y Position"
+                    onChange={this.onChangeY}
+                    value={this._y}
+                /><br />
+                <RaisedButton
+                    label="Re-init Grid"
+                    fullWidth={true}
+                    onClick={this.onSubmit}
+                />
+            </>
+        );
+    }
+}
+``` 
+
+Here we use refs to update errorText on TextFields (bug on material-ui < 1.0). 
+We update directly state in child component. It is not the best way but it can save your life.
+
+This is only an easy example but we can go much further with decorators.
 
 ## Exercice Solution
 [_Download Example_](https://github.com/Bogala/langton-ant-dojo/archive/step6.zip)
+
+## Thank you
+Thank you for following each step. I hope I have brought you my vision of react:
+* more mastered and state of the art with typescript
+* more managed async with the observables in redux
+
+You can go further, of course. Indeed, there are ways to push rxjs since the binding of the data but, with this stack, you will be able to cope with most situations:
+* React
+* Typescript (with react-ats-scripts or other scripts-version, you can even do your own)
+* Redux
+* RxJS
+
+And do not forget the methods that will allow you to control your technical debt and your knowledge of the application: Tests Driven Developments (TDD) but also code reviews and clean code.
+
+All the keys are in your hands. Code, have fun, fail fast to succeed and always question your work.
+
+Thank you again and see you soon.
