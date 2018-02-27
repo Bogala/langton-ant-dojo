@@ -11,16 +11,16 @@ export interface UpdateGridEventProps {
     submitForm: (length: number, x: number, y: number) => void;
 }
 
-export interface UpdateGridProps extends UpdateGridBindingProps, UpdateGridEventProps { 
+export interface UpdateGridProps extends UpdateGridBindingProps, UpdateGridEventProps {
     handleClose: () => void;
 }
 
 const changeEventValue = (e: {}): number => Number((e as React.ChangeEvent<HTMLInputElement>).currentTarget.value);
 
 export default class UpdateGrid extends React.Component<UpdateGridProps> {
-    private _lgth:  number;
-    private _x:  number;
-    private _y:  number;
+    private _lgth: number;
+    private _x: number;
+    private _y: number;
 
     constructor(props: UpdateGridProps) {
         super(props);
@@ -47,27 +47,27 @@ export default class UpdateGrid extends React.Component<UpdateGridProps> {
         const { arrayLength, antX, antY } = this.props;
         return (
             <>
-            <TextField
-                id="arrayLength"
-                defaultValue={arrayLength}
-                floatingLabelText="Grid Size (number)"
-                onChange={this.onChangeLength}
-                value={this._lgth}
-            /><br /><TextField
-                id="antX"
-                defaultValue={antX}
-                floatingLabelText="Ant X Position"
-                onChange={this.onChangeX}
-                value={this._x}
-            /><br /><TextField
-                id="antY"
-                defaultValue={antY}
-                floatingLabelText="Ant Y Position"
-                onChange={this.onChangeY}
-                value={this._y}
-            /><br />
-            <RaisedButton label="Re-init Grid" fullWidth={true} onClick={this.onSubmit} />
-        </>
+                <TextField
+                    id="arrayLength"
+                    defaultValue={arrayLength}
+                    floatingLabelText="Grid Size (number)"
+                    onChange={this.onChangeLength}
+                    value={this._lgth}
+                /><br /><TextField
+                    id="antX"
+                    defaultValue={antX}
+                    floatingLabelText="Ant X Position"
+                    onChange={this.onChangeX}
+                    value={this._x}
+                /><br /><TextField
+                    id="antY"
+                    defaultValue={antY}
+                    floatingLabelText="Ant Y Position"
+                    onChange={this.onChangeY}
+                    value={this._y}
+                /><br />
+                <RaisedButton label="Re-init Grid" fullWidth={true} onClick={this.onSubmit} />
+            </>
         );
     }
 }
