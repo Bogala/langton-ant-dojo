@@ -8,11 +8,8 @@ export interface UpdateGridContainerProps {
     handleClose: () => void;
 }
 
-const mapStateToProps: MapStateToProps<UpdateGridBindingProps, UpdateGridProps, MainState> = (state, props) => ({
-    arrayLength: 21 ,
-    antX: 10,
-    antY: 10
-});
+const mapStateToProps: MapStateToProps<UpdateGridBindingProps, UpdateGridProps, MainState> = (state, props) => ({});
+
 // tslint:disable-next-line:max-line-length
 const mapDispatchToProps: MapDispatchToProps<UpdateGridEventProps, UpdateGridProps> = (dispatch, props) => ({
     submitForm: (length: number, x: number, y: number) => {
