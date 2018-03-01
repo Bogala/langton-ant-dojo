@@ -3,9 +3,9 @@
 Redux reducers handle state transitions, but they must be 
 handled synchronously.
 
-But what about Async like User interactions, ajax calls (with cancellation), web sockets or animations?
+But what about Async events like User interactions, ajax calls (with cancellation), web sockets or animations?
 
-See more with my presentation [async-reduc-observable](https://github.com/Bogala/async-redux-observable)
+See more in my presentation [async-reduc-observable](https://github.com/Bogala/async-redux-observable)
 
 ## Observables and RxJS
 What is an observable ?
@@ -14,8 +14,8 @@ What is an observable ?
 * over any amount of time
 * cancellable and lazy
 
-What is RxJS ? Observables and functions to create and compose Observables, also knwown as "Lodash for async".
-RxJS combines the Observer pattern with the Iterator pattern and functional programming with collections to fill the need for an ideal way of managing sequences of events.
+What is RxJS ? It contains Observables and functions to create and compose Observables, also known as "Lodash for async".
+RxJS combines the Observer and Iterator patterns, functional programming and collections in an ideal way to manage sequences of events.
 
 ![](http://reactivex.io/assets/operators/legend.png)
 
@@ -47,7 +47,7 @@ and returns a stream of new actions to dispatch.
 
 ## Refactor
 ### Change actions name
-To prepare next step, we have to change PLAY action :
+To prepare next step, we have to change the PLAY action :
 
 __actions.ts__
 
@@ -57,7 +57,7 @@ export const PLAYED = 'PLAYED';
 export const PAUSED = 'PAUSED';
 ``` 
 
-Now, on reducer, PLAY is PLAYED. (PLAY will be used for loop)
+Now, in the reducer, PLAY becomes PLAYED. (PLAY will be used for the loop)
 ``` typescript
 export default (state: MainState = initialState, action: Action) => {
   switch (action.type) {
@@ -72,7 +72,7 @@ export default (state: MainState = initialState, action: Action) => {
 ``` 
 
 ### NPM packages
-Before all, we have to install packages
+First, we have to install packages:
 
 ``` shell
 yarn add rxjs redux-observable
@@ -81,7 +81,7 @@ yarn add rxjs redux-observable
 Types are included in each package. We don't have to add any `@types/rxjs` or `@types/redux-observable`
 
 ### Epic by the test
-Make our first test
+Let's code our first test:
 __epic.spec.ts__
 
 ``` typescript
@@ -114,7 +114,7 @@ describe('Epic', () => {
 });
 ``` 
 
-That make an epic like this :
+That makes an epic like this:
 ``` typescript
 export default (action$: ActionsObservable<Action>) => 
     action$.ofType(PLAY)
@@ -124,7 +124,7 @@ export default (action$: ActionsObservable<Action>) =>
         );
 ```
 
-A second test
+A second test:
 
 ``` typescript
     test('Dispatch cancelled when paused', () => {
@@ -141,7 +141,7 @@ A second test
     });
 ```
 
-Our new epic :
+Our new epic:
 ``` typescript
 export default (action$: ActionsObservable<Action>) => 
     action$.ofType(PLAY)
@@ -153,7 +153,7 @@ export default (action$: ActionsObservable<Action>) =>
 ```
 
 ### Add Middleware
-We have to change our store index.ts
+We have to change our store index.ts:
 
 ``` typescript
 import { createStore, applyMiddleware } from 'redux';
@@ -180,10 +180,10 @@ export const configureStore = () => (
 
 export {MainState, Ant} from './reducer';
 ``` 
-Now, we use compose to enhance previous configuration with epicMiddleWare (redux-observable)
+Now, we are using compose to enhance previous configuration with epicMiddleWare (redux-observable).
 
 ### Update App container
-Our mapDispatchToProps don't need interval anymore. we will use dispatch to call redux an epic middleware :
+Our mapDispatchToProps doesn't need interval anymore. we will use dispatch to call redux an epic middleware :
 ``` typescript
 const mapDispatchToProps: MapDispatchToProps<AppEventProps, AppProps> = (dispatch, ownProps) => ({
     onPlay: () => {
@@ -195,7 +195,7 @@ const mapDispatchToProps: MapDispatchToProps<AppEventProps, AppProps> = (dispatc
 });
 ``` 
 
-But whith this our test won’t work, we make one dispatch more by button clicked :
+But with this our test won't work, we make one too many dispatch call when the button is clicked:
 ``` typescript
     test('Pause button stop dispatchs', async () => {
         // tslint:disable-next-line:no-any
@@ -229,7 +229,7 @@ But whith this our test won’t work, we make one dispatch more by button clicke
 
 ## New functional need
 Please try over 900 movements... Your ant needs a bigger grid.
-So, now, we need to have a dynamic size for our grid.
+So, now we need a dynamic size for our grid.
 
 If your Ant is on the border of the grid: 
 * add one line above
