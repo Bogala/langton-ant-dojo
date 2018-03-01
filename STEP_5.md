@@ -124,6 +124,36 @@ export default (action$: ActionsObservable<Action>) =>
         );
 ```
 
+> #### switchMap ?
+> 
+> A `switchMap` is a comination of a switchAll and a map.
+> 
+> `switchAll` subscribes and produces values only from the most recent inner sequence ignoring previous streams.
+> 
+> In the diagram below you can see the `H` higher-order stream that produces two inner streams `A` and `B`. The `switchAll` operator takes values from the A stream first and then from the stream `B` and passes them through the resulting sequence.
+> 
+> ![](https://cdn-images-1.medium.com/max/800/1*OZQs3nPxTxE3IZ-pTnDxLQ.gif)
+> 
+> Here is the code example that demonstrates the setup shown by the above diagram:
+> 
+> ``` js
+> const a = stream(‘a’, 200, 3);
+> const b = stream(‘b’, 200, 3);
+> const h = interval(100).pipe(take(2), map(i => [a, b][i]));
+> h.pipe(switchAll()).subscribe(fullObserver(‘switchAll’));
+> ``` 
+> 
+> If we use directly switchMap :
+> 
+> ``` js
+> const a = stream(‘a’, 200, 3);
+> const b = stream(‘b’, 200, 3);
+> const h = interval(100).pipe(take(2), switchMap(i => [a, b][i]));
+> h.subscribe(fullObserver(‘switchAll’));
+> ``` 
+>
+> for more informations, please refer to the [Max NgWizard K's post on medium](https://blog.angularindepth.com/learn-to-combine-rxjs-sequences-with-super-intuitive-interactive-diagrams-20fce8e6511)
+
 A second test:
 
 ``` typescript
