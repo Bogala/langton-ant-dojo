@@ -18,10 +18,15 @@ export interface AppEventProps {
   onPlay?: () => void;
   onPause?: () => void;
 }
-export interface AppProps extends AppBindingProps, AppEventProps { }
+export interface AppPkrops extends AppBindingProps, AppEventProps { }
 
 interface AppState {
   isOpen: boolean;
+}
+
+export interface AppProps { 
+  title?: string; 
+  onMove?: () => void;
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -40,6 +45,8 @@ class App extends React.Component<AppProps, AppState> {
     this.setState({ isOpen: false });
   }
 
+  
+
   render() {
     const { title, onPause, onPlay } = this.props;
     const { isOpen } = this.state;
@@ -48,9 +55,7 @@ class App extends React.Component<AppProps, AppState> {
         <div>
           <AppBar
             title={title || 'Langton Ant'}
-            // tslint:disable-next-line:max-line-length
-            iconElementLeft={<><IconButton><AvPause onClick={onPause} /></IconButton> <IconButton><AvPlayArrow onClick={onPlay} /></IconButton></>}
-            iconElementRight={<IconButton><AvEqualizer onClick={this.handleClickOpen} /></IconButton>}
+            iconElementLeft={<IconButton><AvPlayArrow onClick={onMove} /></IconButton>}
           />
           <div>
             <div className="stretch">

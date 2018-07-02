@@ -39,13 +39,12 @@ describe('[App]Step 2 : a grid and an ant', () => {
     expect(wrapper.find(AppBar).prop('title')).toBe('Langton Ant');
   });
 
-  test('AppBar must have a play buttone', () => {
+  test('AppBar must have a play button', () => {
     const click = () => { return; };
     const wrapper = shallow(<App onPlay={click} onPause={click} />);
     const { iconElementLeft } = wrapper.find(AppBar).props();
     expect(iconElementLeft)
-      // tslint:disable-next-line:max-line-length
-      .toEqual(<><IconButton><AvPause onClick={click} /></IconButton> <IconButton><AvPlayArrow onClick={click} /></IconButton></>);
+      .toEqual(<IconButton><AvPlayArrow onClick={click} /></IconButton>);
   });
 
   test('AppBar must have a settings buttone', () => {
