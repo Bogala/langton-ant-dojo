@@ -55,7 +55,7 @@ export default App;
 ``` 
 Now, we have to remove all useless code in our component and replace this with a little loader at the center of the screen.
 
-__App.spec.tsx__
+__App.test.tsx__
 ``` typescript
 import 'jest-enzyme';
 
