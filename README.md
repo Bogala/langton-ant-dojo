@@ -30,6 +30,37 @@ In this type of sessions, we add one key constraint on the TDD cycle : Before ea
 
 The five minute time constraint sounds fiendish doesn’t it? How can you possibly get anything done in five minutes? Well, you can, if you tackle something small enough. This exercise is designed to force you to think in small increments of functionality.
 
+
+### BDD
+Behaviour-Driven Development (BDD) is a set of practices that aim to reduce some common wasteful activities in software development:
+* Rework caused by misunderstood or vague requirements
+* Technical debt caused by reluctance to refactor code
+* Slow feedback cycles caused by silos and hand-overs
+
+BDD aims to narrow the communication gaps between team members, foster better understanding of the customer and promote continuous communication with real world examples.
+
+![BDD](./images/bdd.png)
+
+### Example mapping
+Example Mapping is a simple method to make this conversation short and very productive.
+
+Concrete examples are a great way to help us explore and understand the problem domain. They are a great basis for our acceptance tests.
+
+When discussing examples, other things might come up in the conversation that deserve to be captured too:
+* rules that summarise a set of examples, or express other constraints.
+* questions that cannot be answered during the conversation, or assumptions that are made.
+* new user stories discovered or sliced and deferred out of scope.
+
+We can capture these different types of information on index cards, and arrange them in a map:
+* We write the story on a yellow card and place it on top.
+* Each of the acceptance criteria, or rules, is written on a blue card and placed beneath the yellow story card.
+* Examples to illustrate these rules are written on a green card and placed under the relevant rule.
+* Questions that cannot be answered during the session are captured on a red card so we can move on with the conversation.
+
+We keep going until the group is satisfied that the scope of the story is clear, or we run out of time.
+
+
+
 ### Code coverage
 All __your__ code must be covered by unit tests. Our technology permit this : React, TypeScript, Jest and Enzyme.
 
