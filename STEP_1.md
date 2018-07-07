@@ -5,9 +5,9 @@ Please make a new git repository on your own github space and clone it. (You can
 Please verify if you have the latest version of NodeJS (`node -v` >= 8.9.3), NPM (`npm -v` >= 5.6.0) and Yarn (`yarn -v`>= 1.3.2)
 
 On your cloned repository, make a new app with [create-react-app](https://github.com/facebookincubator/create-react-app) 
-and [react-ats-scripts](https://www.npmjs.com/package/react-ats-scripts) :
+and [react-scripts-ts](https://www.npmjs.com/package/react-scripts-ts) :
 ```shell
-npx create-react-app langton-ant-app --scripts-version=react-ats-scripts
+npx create-react-app langton-app --scripts-version=react-scripts-ts
 ```
 
 ## Add MaterialUI and update App layout
@@ -57,7 +57,6 @@ Now, we have to remove all useless code in our component and replace this with a
 
 __App.spec.tsx__
 ``` typescript
-import 'core-js';
 import 'jest-enzyme';
 
 import * as Adapter from 'enzyme-adapter-react-16';
