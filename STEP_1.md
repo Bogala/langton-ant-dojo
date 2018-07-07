@@ -10,6 +10,11 @@ and [react-scripts-ts](https://www.npmjs.com/package/react-scripts-ts) :
 npx create-react-app langton-app --scripts-version=react-scripts-ts
 ```
 
+To test our app, we have to install enzyme
+``` shell
+yarn add enzyme @types/enzyme enzyme-adapter-react-16 @types/enzyme-adapter-react-16 -D
+``` 
+
 ## Add MaterialUI and update App layout
 Material-UI is a set of React components that implement [Google's Material Design](https://www.google.com/design/spec/material-design/introduction.html) specification.
 
