@@ -87,8 +87,8 @@ it('App component contains default loader in material design', () => {
 });
 ```
 
-__App.scss__
-```scss
+__App.css__
+``` css
 .center {
   position: fixed;
   top: 50%;
@@ -99,9 +99,10 @@ __App.scss__
 
 __App.tsx__
 ``` tsx
-import * as React from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { CircularProgress } from 'material-ui';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import * as React from 'react';
+import './App.css';
 
 export default () => (
   <MuiThemeProvider>
