@@ -7,7 +7,7 @@ Please verify if you have the latest version of NodeJS (`node -v` >= 8.9.3), NPM
 On your cloned repository, make a new app with [create-react-app](https://github.com/facebookincubator/create-react-app) 
 and [react-scripts-ts](https://www.npmjs.com/package/react-scripts-ts) :
 ```shell
-npx create-react-app langton-app --scripts-version=react-scripts-ts
+npx create-react-app langton-react --scripts-version=react-scripts-ts
 ```
 
 To test our app, we have to install enzyme
