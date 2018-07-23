@@ -49,6 +49,184 @@ Reducers specify how the application's state changes in response to actions sent
 ### What is a container ?
 The container is the connector between React component and reducers (redux state).
 
+## Make a store with Redux and create our first reducer
+We have to install packages redux, react-redux and recompose (used for [Higher-Order Components](https://reactjs.org/docs/higher-order-components.html))
+``` shell
+yarn add redux recompose react-redux
+```
+
+, associated types and mock system...
+``` shell
+yarn add @types/redux @types/recompose @types/react-redux redux-mock-store @types/redux-mock-store -D
+```
+
+Now, we can initiate and connect redux to react.
+
+Let's create a store folder under src and add a reducer
+```
+lagton-ant-app
+|_ src
+   |_ components
+      |_ App
+         |_ App.scss
+         |_ App.spec.tsx
+         |_ App.ts
+         |_ index.ts
+   |_ store
+      |_ index.ts
+      |_ reducer.spec.ts
+      |_ reducer.ts
+   |_ stories
+      |_ index.tsx
+   |_ index.ts
+   |_ registerServiceWorker.ts
+[...]
+```
+
+__reducer.spec.ts__
+``` typescript
+import { MainState, default as  reducer } from './reducer';
+import { Action } from 'redux';
+
+describe('reducer', () => {
+  it('should initialise with MainState Interface', () => {
+    const actual = reducer(undefined, { type: null} as Action);
+    expect(actual as MainState).toBeTruthy();
+  });
+
+  it('should pass state by cdefault', () => {
+    class MockMainState implements MainState {}
+    const actual = reducer(new MockMainState(), { type: null} as Action);
+    expect(actual instanceof MockMainState).toBeTruthy();
+  });
+});
+```
+
+__reducer.ts__
+``` typescript
+import { Action } from 'redux';
+
+export interface MainState {
+
+}
+
+const initialState: MainState = {};
+
+export default (state: MainState = initialState, action: Action) => {
+  switch (action.type) {
+    default:
+      return state;
+  }
+};
+```
+
+Now make a store with this reducer
+``` typescript
+import { createStore } from 'redux';
+import reducer from './reducer';
+
+export const configureStore = () => (
+    createStore(
+        reducer,
+        // tslint:disable-next-line:no-any
+        (window as any).__REDUX_DEVTOOLS_EXTENSION__ && (window as any).__REDUX_DEVTOOLS_EXTENSION__()
+    )
+);
+```
+
+## Connect our reducer with our react application
+To connect redux and react, we have two steps :
+1. Initiate and maintain a store instance
+1. Connect each component who need the reducer
+
+### Connect the store to the application
+The file to update for this is our main `index.tsx`
+We have to surround our app component with a react-redux `Provider`
+``` tsx
+[...]
+import { Provider } from 'react-redux';
+import { configureStore } from './store/index';
+
+ReactDOM.render(
+  <Provider store={configureStore()}>
+    <App />
+  </Provider>,
+  document.getElementById('root') as HTMLElement
+);
+[...]
+```
+
+### Prepare component to be enhanced
+To prepare App component, we have to make a typing for the props :
+* An interface for binding elements
+* An interface for event elements
+* One interface to rule them all, to find them, to bring them all and in the darkness bind them.
+
+Add these interfaces to your __App.tsx__
+``` tsx
+[...]
+export interface AppBindingProps {}
+export interface AppEventProps {}
+export interface AppProps extends AppBindingProps, AppEventProps {}
+
+export default (props: AppProps) => (
+[...]
+```
+### Enhance component
+Add a new file __App.container.spec.tsx__
+``` tsx
+import 'core-js';
+import 'jest-enzyme';
+
+import * as Adapter from 'enzyme-adapter-react-16';
+import * as React from 'react';
+
+import { configure, shallow, ShallowWrapper } from 'enzyme';
+
+import configureStore from 'redux-mock-store';
+
+import App from './';
+
+// tslint:disable-next-line:no-any
+configure({ adapter: new Adapter() });
+
+const mockStore = configureStore();
+let container: ShallowWrapper;
+
+describe('App container', () => {
+    beforeEach(() => {
+        const store = mockStore({});
+        container = shallow(<App />, { context: { store } });
+    });
+
+    it('renders without crashing', () => {
+        expect(container.length).toEqual(1);
+    });
+});
+```
+
+and associated __App.container.ts__ 
+``` typescript
+import { MapStateToProps, MapDispatchToProps, connect } from 'react-redux';
+import { MainState } from '../../store/reducer';
+import App, { AppProps, AppBindingProps, AppEventProps } from './App';
+
+const mapStateToProps: MapStateToProps<AppBindingProps, AppProps, MainState> = (state, props) => ({});
+const mapDispatchToProps: MapDispatchToProps<AppEventProps, AppProps> = (dispatch, ownProps) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
+```
+
+you can understand mapStateToProps types like :
+```typescript
+mapStateToProps = (state: MainState, props: AppProps):AppBindingProps => ({});
+```
+
+Not forget to change index.ts reference :
+``` typescript
+import App from './App.container';
+```
+
 ### Migration by the tests
 Move refs from `App.state` to `App[Grid].props` on `App.spec.tsx`.
 For example
