@@ -9,6 +9,65 @@ Please replace the current loader in the application by :
 
 if you do not master React, here are some things that might help you
 
+## Create a new feature
+Before all, we need gherkin testing model (cucumber).
+If you use VSCode, install [Cucumber (Gherkin) Full Support](https://marketplace.visualstudio.com/items?itemName=alexkrechik.cucumberautocomplete)
+``` shell
+code --install-extension alexkrechik.cucumberautocomplete
+``` 
+
+For webstorm, you can use [Gherkin extension](https://plugins.jetbrains.com/plugin/7211-gherkin).
+
+Next step is to install jest-cucumber :
+``` shel
+yarn add jest-cucumber -D
+``` 
+
+Usually, we do not use Gherkin and BDD for interface tests. We only test behaviors (BDD = Behavior Driven Development).
+Here, for the needs of the dojo, we will bypass this rule a little bit and we will test interface in `feature` files.
+
+Lets create a new folder under `src` : `grid` and a first file `grid.feature`
+``` gherkin
+Feature: Langton ant workspace
+
+  Scenario: My initial conditions
+     When I launch application
+     Then I have a grid with 21 lines, 21 cells each line and an ant at the middle
+     And I have a Material AppBar with title "Langton Ant"
+     And I have a play button on AppBar
+``` 
+
+To test this gherkin scenario, we need a feature implementation file `grid.feature.spec.tsx`
+``` typescript
+import 'jest-enzyme';
+
+import * as Adapter from 'enzyme-adapter-react-16';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+
+import { configure, shallow } from 'enzyme';
+
+import { defineFeature, loadFeature } from "jest-cucumber";
+
+const feature = loadFeature("./src/grid/grid.feature");
+
+defineFeature(feature, test => {
+  test("My initial conditions", ({ given, when, then, pending }) => {
+    when("I launch applicatiopn", () => {
+      pending();
+    });
+    then(/^I have a grid with (.*) lines, (.*) cells each line and an ant at the middle$/, (lines, cells) => {
+      pending();
+    });
+    then(/^I have a Material AppBar with title "(.*)"$/, title => {
+      pending();
+    });
+    then("I have a play button on AppBar", () => {
+      pending();
+    });
+  });
+``` 
+
 ## How create a new React Component
 A simple function is enough to create a component
 ``` jsx
