@@ -14,13 +14,13 @@ defineFeature(feature, test => {
     when("I launch application", () => {
       wrapper = mount(<App />);
     });
-    then(/^I have a grid with (.*) lines, (.*) cells each line and an ant at the middle$/, (lines, cells) => {
-      expect(wrapper.find('tr').length).toBe(21);
+    then(/^I have a grid with (.*) lines, (.*) cells each line and an ant at the middle$/, (lines: number, cells: number) => {
+      expect(wrapper.find('tr').length).toEqual(+lines);
       wrapper.find('tr').forEach((line, y) => {
-        expect(line.find('td').length).toBe(21);
+        expect(line.find('td').length).toEqual(+cells);
         line.find('td').forEach((child, x) => {
-          const expectedCount = (y === 10 && x === 10) ? 1 : 0;
-          expect(child.find('.ant').length).toBe(expectedCount);
+          const expectedCount = (y === (lines-1)/2 && x === (cells-1)/2) ? 1 : 0;
+          expect(child.find('.ant').length).toEqual(expectedCount);
         });
       });
     });
