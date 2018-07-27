@@ -6,8 +6,8 @@ import * as ReactDOM from 'react-dom';
 
 import { configure, shallow } from 'enzyme';
 
-import { CircularProgress } from 'material-ui';
 import App from './App';
+import Grid from './grid/Grid';
 
 // tslint:disable-next-line:no-any
 configure({ adapter: new Adapter() });
@@ -19,6 +19,5 @@ it('renders without crashing', () => {
 
 it('App component contains default loader in material design', () => {
   const wrapper = shallow(<App />);
-  expect(wrapper.find('.center')).toHaveLength(1);
-  expect(wrapper.find(CircularProgress)).toHaveLength(1);
+  expect(wrapper.find(Grid)).toHaveLength(1);
 });

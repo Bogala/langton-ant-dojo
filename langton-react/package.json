@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "jest-cucumber": "^1.0.7",
     "material-ui": "^0.20.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
@@ -25,7 +24,15 @@
     "@types/react-dom": "^16.0.6",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "jest-cucumber": "^1.0.7",
     "jest-enzyme": "^6.0.2",
     "typescript": "^2.9.2"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.ts?(x)",
+      "!src/index.tsx",
+      "!src/registerServiceWorker.ts"
+    ]
   }
 }

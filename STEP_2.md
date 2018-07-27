@@ -53,7 +53,7 @@ const feature = loadFeature("./src/grid/grid.feature");
 
 defineFeature(feature, test => {
   test("My initial conditions", ({ given, when, then, pending }) => {
-    when("I launch applicatiopn", () => {
+    when("I launch application", () => {
       pending();
     });
     then(/^I have a grid with (.*) lines, (.*) cells each line and an ant at the middle$/, (lines, cells) => {

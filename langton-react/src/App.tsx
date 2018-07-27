@@ -1,12 +1,10 @@
-import { CircularProgress } from 'material-ui';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import * as React from 'react';
-import './App.css';
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+import * as React from "react";
+import "./App.css";
+import Grid from "./grid/Grid";
 
 export default () => (
   <MuiThemeProvider>
-    <div className="center">
-      <CircularProgress size={180} thickness={5} />
-    </div>
+    <Grid />
   </MuiThemeProvider>
 );
