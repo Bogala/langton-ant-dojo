@@ -66,6 +66,7 @@ defineFeature(feature, test => {
       pending();
     });
   });
+});
 ``` 
 
 ## How create a new React Component
