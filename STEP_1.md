@@ -12,6 +12,7 @@ npx create-react-app langton-react --scripts-version=react-scripts-ts
 
 To test our app, we have to install enzyme
 ``` shell
+cd langton-react
 yarn add enzyme @types/enzyme enzyme-adapter-react-16 @types/enzyme-adapter-react-16 jest-enzyme -D
 ``` 
 
